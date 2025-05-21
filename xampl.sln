@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xampl", "xampl\xampl.csproj", "{055D8A8C-74A1-4F43-B35C-75F074484588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xamplTests", "xamplTests\xamplTests.csproj", "{0595CABA-7C25-4C07-ABD7-B5AEB241FD06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{055D8A8C-74A1-4F43-B35C-75F074484588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{055D8A8C-74A1-4F43-B35C-75F074484588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{055D8A8C-74A1-4F43-B35C-75F074484588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{055D8A8C-74A1-4F43-B35C-75F074484588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0595CABA-7C25-4C07-ABD7-B5AEB241FD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0595CABA-7C25-4C07-ABD7-B5AEB241FD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0595CABA-7C25-4C07-ABD7-B5AEB241FD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0595CABA-7C25-4C07-ABD7-B5AEB241FD06}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5B566202-E0C1-4973-947C-E27C0708B9C0}
+	EndGlobalSection
+EndGlobal
