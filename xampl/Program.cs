@@ -1,14 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using xampl.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Add dbContext
+builder.Services.AddDbContextPool<xamplContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("supabase"), options =>
+    {
+        options.CommandTimeout(180);
+    })
+);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/About/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -22,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=About}/{action=Index}/{id?}");
 
 app.Run();

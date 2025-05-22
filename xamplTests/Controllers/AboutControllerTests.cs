@@ -9,28 +9,10 @@ using System.Threading.Tasks;
 namespace xampl.Controllers.Tests
 {
     [TestClass()]
-    public class HomeControllerTests
+    public class AboutControllerTests
     {
         [TestMethod()]
-        public void HomeControllerTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
         public void IndexTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void PrivacyTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ErrorTest()
         {
             Assert.Fail();
         }
