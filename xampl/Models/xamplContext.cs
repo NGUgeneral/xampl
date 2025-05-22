@@ -79,6 +79,9 @@ public partial class xamplContext : DbContext
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
             entity.Property(e => e.ListItems).HasColumnName("list_items");
+            entity.Property(e => e.Position)
+                .HasDefaultValueSql("'0'::smallint")
+                .HasColumnName("position");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DocumentLists)
                 .HasForeignKey(d => d.CreatedBy)
@@ -99,6 +102,9 @@ public partial class xamplContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
+            entity.Property(e => e.Position)
+                .HasDefaultValueSql("'0'::smallint")
+                .HasColumnName("position");
             entity.Property(e => e.Text)
                 .IsRequired()
                 .HasDefaultValueSql("''::character varying")
@@ -119,6 +125,9 @@ public partial class xamplContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.Position)
+                .HasDefaultValueSql("'0'::smallint")
+                .HasColumnName("position");
             entity.Property(e => e.Text)
                 .IsRequired()
                 .HasDefaultValueSql("''::character varying")
@@ -139,8 +148,6 @@ public partial class xamplContext : DbContext
 
             entity.HasIndex(e => e.Email, "Uaer_email_key").IsUnique();
 
-            entity.HasIndex(e => e.Name, "Uaer_name_key").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
@@ -149,10 +156,14 @@ public partial class xamplContext : DbContext
                 .IsRequired()
                 .HasColumnType("character varying")
                 .HasColumnName("email");
-            entity.Property(e => e.Name)
-                .IsRequired()
+            entity.Property(e => e.FirstName)
+                .HasDefaultValueSql("''::character varying")
                 .HasColumnType("character varying")
-                .HasColumnName("name");
+                .HasColumnName("first_name");
+            entity.Property(e => e.LastName)
+                .HasDefaultValueSql("''::character varying")
+                .HasColumnType("character varying")
+                .HasColumnName("last_name");
         });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
 
