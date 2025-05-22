@@ -10,11 +10,17 @@ namespace xampl.Models;
 /// </summary>
 public partial class User
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
     public string Name { get; set; }
 
     public string Email { get; set; }
+
+    public virtual ICollection<DocumentList> DocumentLists { get; set; } = new List<DocumentList>();
+
+    public virtual ICollection<DocumentNote> DocumentNotes { get; set; } = new List<DocumentNote>();
+
+    public virtual ICollection<Document> Documents { get; set; } = new List<Document>();
 }

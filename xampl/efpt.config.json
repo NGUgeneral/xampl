@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 4,
-   "ContextClassName": "postgresContext",
+   "ContextClassName": "xamplContext",
    "ContextNamespace": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
@@ -14,6 +14,22 @@
    "SelectedToBeGenerated": 0,
    "T4TemplatePath": null,
    "Tables": [
+      {
+         "Name": "public.Document",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.DocumentList",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.DocumentListItem",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.DocumentNote",
+         "ObjectType": 0
+      },
       {
          "Name": "public.User",
          "ObjectType": 0
