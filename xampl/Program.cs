@@ -1,7 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using xampl.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Add dbContext
+builder.Services.AddDbContextPool<xamplContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("supabase"), options =>
+    {
+        options.CommandTimeout(180);
+    })
+);
 
 var app = builder.Build();
 
