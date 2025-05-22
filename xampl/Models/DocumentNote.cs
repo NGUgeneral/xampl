@@ -15,5 +15,7 @@ public partial class DocumentNote
 
     public string Text { get; set; }
 
+    public short Position { get; set; }
+
     public virtual User CreatedByNavigation { get; set; }
 }

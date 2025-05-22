@@ -15,5 +15,7 @@ public partial class DocumentList
 
     public List<int> ListItems { get; set; }
 
+    public short Position { get; set; }
+
     public virtual User CreatedByNavigation { get; set; }
 }

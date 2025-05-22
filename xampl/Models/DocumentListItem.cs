@@ -14,4 +14,6 @@ public partial class DocumentListItem
     public string Text { get; set; }
 
     public bool Checked { get; set; }
+
+    public short Position { get; set; }
 }
