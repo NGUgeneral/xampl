@@ -6,7 +6,7 @@
    "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "Models",
+   "OutputPath": "Models\/DTO",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "xampl",
    "Schemas": null,

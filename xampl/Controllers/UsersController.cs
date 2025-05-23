@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using xampl.Models;
+using xampl.Models.DTO;
 
 namespace xampl.Controllers
 {
@@ -53,7 +53,7 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreatedAt,Name,Email")] User user)
+        public async Task<IActionResult> Create([Bind("Id,CreatedAt,FirstName,LastName,Email")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,8 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,Name,Email")] User user)
+        //TODO: should be UserVM instead of User with Bind;
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,FirstName,LastName,Email")] User user)
         {
             if (id != user.Id)
             {

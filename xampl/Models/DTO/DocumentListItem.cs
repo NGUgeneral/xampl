@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace xampl.Models;
+namespace xampl.Models.DTO;
 
 public partial class DocumentListItem
 {
@@ -16,4 +16,8 @@ public partial class DocumentListItem
     public bool Checked { get; set; }
 
     public short Position { get; set; }
+
+    public int CreatedBy { get; set; }
+
+    public virtual User CreatedByNavigation { get; set; }
 }
