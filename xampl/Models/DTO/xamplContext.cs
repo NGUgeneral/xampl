@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace xampl.Models;
+namespace xampl.Models.DTO;
 
 public partial class xamplContext : DbContext
 {
@@ -95,6 +95,8 @@ public partial class xamplContext : DbContext
 
             entity.ToTable("DocumentListItem");
 
+            entity.HasIndex(e => e.CreatedBy, "DocumentListItem_created_by_idx");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Checked)
                 .HasDefaultValue(false)
@@ -102,6 +104,7 @@ public partial class xamplContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
             entity.Property(e => e.Position)
                 .HasDefaultValueSql("'0'::smallint")
                 .HasColumnName("position");
@@ -110,6 +113,11 @@ public partial class xamplContext : DbContext
                 .HasDefaultValueSql("''::character varying")
                 .HasColumnType("character varying")
                 .HasColumnName("text");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DocumentListItems)
+                .HasForeignKey(d => d.CreatedBy)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DocumentListItem_created_by_fkey");
         });
 
         modelBuilder.Entity<DocumentNote>(entity =>

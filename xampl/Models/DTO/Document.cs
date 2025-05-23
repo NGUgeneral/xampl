@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace xampl.Models;
+namespace xampl.Models.DTO;
 
 public partial class Document
 {

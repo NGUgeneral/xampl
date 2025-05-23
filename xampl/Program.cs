@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using xampl.Models;
+using xampl.Models.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
