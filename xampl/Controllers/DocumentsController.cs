@@ -21,8 +21,8 @@ namespace xampl.Controllers
         // GET: Documents
         public async Task<IActionResult> Index()
         {
-            var xamplContext = _context.Documents.Include(d => d.CreatedByNavigation);
-            return View(await xamplContext.ToListAsync());
+            var documentsContext = _context.Documents.Include(d => d.CreatedByNavigation);
+            return View(await documentsContext.ToListAsync());
         }
 
         // GET: Documents/Details/5
@@ -56,7 +56,7 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreatedAt,CreatedBy,Title,Lists,Notes")] Document document)
+        public async Task<IActionResult> Create([Bind("Id,CreatedAt,CreatedBy,Title")] Document document)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,CreatedBy,Title,Lists,Notes")] Document document)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,CreatedBy,Title")] Document document)
         {
             if (id != document.Id)
             {
