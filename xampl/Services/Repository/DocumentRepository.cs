@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using xampl.Models.ViewModels;
+using xampl.ViewModels;
 
 namespace xampl.Services.Repository
 {

@@ -1,4 +1,4 @@
-﻿namespace xampl.Models.DTO
+﻿namespace xampl.Models.Documents
 {
     // DO NOT USE IT AS WRAPPER FOR ADDITIONAL FUNCTIONALITY,
     // MOST LIKELY YOU ARE LOOKING FOR VIEW MODELS.

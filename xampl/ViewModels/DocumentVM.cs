@@ -1,6 +1,4 @@
-﻿using xampl.Models.DTO;
-
-namespace xampl.Models.ViewModels
+﻿namespace xampl.ViewModels
 {
     public class DocumentVM
     {
@@ -14,6 +12,6 @@ namespace xampl.Models.ViewModels
 
         public List<DocumentListVM> Lists { get; set; } = [];
 
-        public List<DocumentNote> Notes { get; set; } = [];
+        public List<DocumentNoteVM> Notes { get; set; } = [];
     }
 }

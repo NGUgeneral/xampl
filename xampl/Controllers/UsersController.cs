@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using xampl.Models.DTO;
+using xampl.Models.Documents;
 
 namespace xampl.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly xamplContext _context;
+        private readonly DocumentsContext _context;
 
-        public UsersController(xamplContext context)
+        public UsersController(DocumentsContext context)
         {
             _context = context;
         }

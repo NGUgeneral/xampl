@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace xampl.Models.DTO;
+namespace xampl.Models.Documents;
 
-public partial class DocumentNote
+public partial class Document
 {
     public int Id { get; set; }
 
@@ -13,9 +13,11 @@ public partial class DocumentNote
 
     public int CreatedBy { get; set; }
 
-    public string Text { get; set; }
-
-    public short Position { get; set; }
+    public string Title { get; set; }
 
     public virtual User CreatedByNavigation { get; set; }
+
+    public virtual ICollection<DocumentList> DocumentLists { get; set; } = new List<DocumentList>();
+
+    public virtual ICollection<DocumentNote> DocumentNotes { get; set; } = new List<DocumentNote>();
 }

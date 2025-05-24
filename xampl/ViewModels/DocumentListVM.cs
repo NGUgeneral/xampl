@@ -1,6 +1,4 @@
-﻿using xampl.Models.DTO;
-
-namespace xampl.Models.ViewModels
+﻿namespace xampl.ViewModels
 {
     public class DocumentListVM
     {

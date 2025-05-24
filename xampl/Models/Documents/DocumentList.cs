@@ -3,21 +3,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace xampl.Models.DTO;
+namespace xampl.Models.Documents;
 
-public partial class DocumentListItem
+public partial class DocumentList
 {
     public int Id { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public string Text { get; set; }
-
-    public bool Checked { get; set; }
-
     public short Position { get; set; }
 
-    public int CreatedBy { get; set; }
+    public int DocumentId { get; set; }
 
-    public virtual User CreatedByNavigation { get; set; }
+    public virtual Document Document { get; set; }
+
+    public virtual ICollection<DocumentListItem> DocumentListItems { get; set; } = new List<DocumentListItem>();
 }

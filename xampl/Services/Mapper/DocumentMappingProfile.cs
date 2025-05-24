@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using xampl.Models.DTO;
-using xampl.Models.ViewModels;
+using xampl.Models.Documents;
+using xampl.ViewModels;
 
 namespace xampl.Services.Mapper
 {

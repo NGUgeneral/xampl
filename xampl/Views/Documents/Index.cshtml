@@ -1,4 +1,4 @@
-﻿@model IEnumerable<xampl.Models.DTO.Document>
+﻿@model IEnumerable<xampl.Models.Documents.Document>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,12 +19,6 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Lists)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.CreatedByNavigation)
             </th>
             <th></th>
@@ -38,12 +32,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lists)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedByNavigation.Email)
