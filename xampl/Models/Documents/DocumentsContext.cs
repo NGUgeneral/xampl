@@ -69,6 +69,8 @@ public partial class DocumentsContext : DbContext
 
             entity.ToTable("DocumentList");
 
+            entity.HasIndex(e => e.DocumentId, "DocumentList_document_id_idx");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
@@ -89,6 +91,8 @@ public partial class DocumentsContext : DbContext
             entity.HasKey(e => e.Id).HasName("ListItem_pkey");
 
             entity.ToTable("DocumentListItem");
+
+            entity.HasIndex(e => e.DocumentListId, "DocumentListItem_document_list_id_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Checked)
@@ -118,6 +122,8 @@ public partial class DocumentsContext : DbContext
             entity.HasKey(e => e.Id).HasName("DocumentNote_pkey");
 
             entity.ToTable("DocumentNote");
+
+            entity.HasIndex(e => e.DocumentId, "DocumentNote_document_id_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
