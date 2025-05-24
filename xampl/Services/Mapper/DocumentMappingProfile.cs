@@ -4,9 +4,9 @@ using xampl.Models.ViewModels;
 
 namespace xampl.Services.Mapper
 {
-    public class XamplMappingProfile : Profile
+    public class DocumentMappingProfile : Profile
     {
-        public XamplMappingProfile()
+        public DocumentMappingProfile()
         {
             CreateMap<UserDto, UserVM>().ReverseMap();
             CreateMap<DocumentDto, DocumentVM>().ReverseMap();
