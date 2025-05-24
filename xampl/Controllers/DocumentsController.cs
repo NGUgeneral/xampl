@@ -2,46 +2,44 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using xampl.Models.DTO;
+using xampl.Models.Documents;
+using xampl.Services.Repository;
+using xampl.ViewModels;
 
 namespace xampl.Controllers
 {
-    public class DocumentsController : Controller
+    public class DocumentsController(
+        DocumentsContext context,
+        IRepository<DocumentsContext> documentsRepository,
+        IMapper mapper
+    ) : Controller
     {
-        private readonly xamplContext _context;
+        private readonly DocumentsContext _context = context;
+        private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
+        private readonly IMapper _mapper = mapper;
 
-        public DocumentsController(xamplContext context)
-        {
-            _context = context;
-        }
 
         // GET: Documents
         public async Task<IActionResult> Index()
         {
-            var xamplContext = _context.Documents.Include(d => d.CreatedByNavigation);
-            return View(await xamplContext.ToListAsync());
+            var documentsContext = _context.Documents.Include(d => d.CreatedByNavigation);
+            return View(await documentsContext.ToListAsync());
         }
 
         // GET: Documents/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+            var document = await _documentsRepository.GetDocumentById((int)id);
+            if (document == null) return NotFound();
 
-            var document = await _context.Documents
-                .Include(d => d.CreatedByNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (document == null)
-            {
-                return NotFound();
-            }
+            var documentVM = _mapper.Map<DocumentVM>(document);
 
-            return View(document);
+            return View(documentVM);
         }
 
         // GET: Documents/Create
@@ -56,7 +54,7 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreatedAt,CreatedBy,Title,Lists,Notes")] Document document)
+        public async Task<IActionResult> Create([Bind("Id,CreatedAt,CreatedBy,Title")] Document document)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +88,7 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,CreatedBy,Title,Lists,Notes")] Document document)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,CreatedBy,Title")] Document document)
         {
             if (id != document.Id)
             {

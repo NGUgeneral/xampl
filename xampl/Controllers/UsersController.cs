@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using xampl.Models.DTO;
+using xampl.Models.Documents;
 
 namespace xampl.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly xamplContext _context;
+        private readonly DocumentsContext _context;
 
-        public UsersController(xamplContext context)
+        public UsersController(DocumentsContext context)
         {
             _context = context;
         }
@@ -53,7 +53,7 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreatedAt,FirstName,LastName,Email")] User user)
+        public async Task<IActionResult> Create([Bind("Id,CreatedAt,Email,FirstName,LastName")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -85,8 +85,7 @@ namespace xampl.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //TODO: should be UserVM instead of User with Bind;
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,FirstName,LastName,Email")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,Email,FirstName,LastName")] User user)
         {
             if (id != user.Id)
             {

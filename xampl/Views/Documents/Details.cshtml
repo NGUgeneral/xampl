@@ -1,4 +1,4 @@
-﻿@model xampl.Models.DTO.Document
+﻿@model xampl.ViewModels.DocumentVM
 
 @{
     ViewData["Title"] = "Details";
@@ -11,35 +11,35 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Lists)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DocumentNotes)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Lists)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Notes)
+        @foreach (var note in Model.DocumentNotes)
+        {
+            <dd class="col-sm-10">
+                @note.Text
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DocumentLists)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedByNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedByNavigation.Email)
-        </dd>
+        @foreach (var list in Model.DocumentLists)
+        {
+            @foreach (var listItem in list.DocumentListItems)
+            {
+                <dt class="col-sm-2">
+                    @listItem.Checked
+                </dt>
+                <dd class="col-sm-10">
+                    @listItem.Text
+                </dd>
+            }
+        }
     </dl>
 </div>
 <div>

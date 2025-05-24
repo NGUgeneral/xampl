@@ -1,7 +1,7 @@
 ﻿namespace xampl.Services.Repository
 {
     public interface IRepository<TContext> :
-        IXamplRepository
+        IDocumentRepository
     {
         Task<List<T>> FindAll<T>() where T : class;
         Task<T?> FindById<T>(int id) where T : class;

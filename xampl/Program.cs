@@ -1,19 +1,20 @@
 using Microsoft.EntityFrameworkCore;
-using xampl.Models.DTO;
+using xampl.Models.Documents;
 using xampl.Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddAutoMapper(typeof(Program));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 // Add dbContext
-builder.Services.AddDbContextPool<xamplContext>(options =>
+builder.Services.AddDbContextPool<DocumentsContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("supabase"), options =>
     {
         options.CommandTimeout(180);
     })
 );
-builder.Services.AddScoped<IRepository<xamplContext>, Repository<xamplContext>>();
+builder.Services.AddScoped<IRepository<DocumentsContext>, Repository<DocumentsContext>>();
 
 var app = builder.Build();
 

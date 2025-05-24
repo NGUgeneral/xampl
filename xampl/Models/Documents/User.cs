@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace xampl.Models.DTO;
+namespace xampl.Models.Documents;
 
 /// <summary>
 /// Store main user data
@@ -19,12 +19,6 @@ public partial class User
     public string FirstName { get; set; }
 
     public string LastName { get; set; }
-
-    public virtual ICollection<DocumentListItem> DocumentListItems { get; set; } = new List<DocumentListItem>();
-
-    public virtual ICollection<DocumentList> DocumentLists { get; set; } = new List<DocumentList>();
-
-    public virtual ICollection<DocumentNote> DocumentNotes { get; set; } = new List<DocumentNote>();
 
     public virtual ICollection<Document> Documents { get; set; } = new List<Document>();
 }

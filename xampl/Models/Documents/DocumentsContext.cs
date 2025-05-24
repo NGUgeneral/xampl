@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace xampl.Models.DTO;
+namespace xampl.Models.Documents;
 
-public partial class xamplContext : DbContext
+public partial class DocumentsContext : DbContext
 {
-    public xamplContext(DbContextOptions<xamplContext> options)
+    public DocumentsContext(DbContextOptions<DocumentsContext> options)
         : base(options)
     {
     }
@@ -52,8 +52,6 @@ public partial class xamplContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-            entity.Property(e => e.Lists).HasColumnName("lists");
-            entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Title)
                 .HasDefaultValueSql("''::character varying")
                 .HasColumnType("character varying")
@@ -71,22 +69,21 @@ public partial class xamplContext : DbContext
 
             entity.ToTable("DocumentList");
 
-            entity.HasIndex(e => e.CreatedBy, "DocumentList_created_by_idx");
+            entity.HasIndex(e => e.DocumentId, "DocumentList_document_id_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-            entity.Property(e => e.ListItems).HasColumnName("list_items");
+            entity.Property(e => e.DocumentId).HasColumnName("document_id");
             entity.Property(e => e.Position)
                 .HasDefaultValueSql("'0'::smallint")
                 .HasColumnName("position");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DocumentLists)
-                .HasForeignKey(d => d.CreatedBy)
+            entity.HasOne(d => d.Document).WithMany(p => p.DocumentLists)
+                .HasForeignKey(d => d.DocumentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DocumentList_created_by_fkey");
+                .HasConstraintName("DocumentList_document_id_fkey");
         });
 
         modelBuilder.Entity<DocumentListItem>(entity =>
@@ -95,7 +92,7 @@ public partial class xamplContext : DbContext
 
             entity.ToTable("DocumentListItem");
 
-            entity.HasIndex(e => e.CreatedBy, "DocumentListItem_created_by_idx");
+            entity.HasIndex(e => e.DocumentListId, "DocumentListItem_document_list_id_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Checked)
@@ -104,7 +101,7 @@ public partial class xamplContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.DocumentListId).HasColumnName("document_list_id");
             entity.Property(e => e.Position)
                 .HasDefaultValueSql("'0'::smallint")
                 .HasColumnName("position");
@@ -114,10 +111,10 @@ public partial class xamplContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("text");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DocumentListItems)
-                .HasForeignKey(d => d.CreatedBy)
+            entity.HasOne(d => d.DocumentList).WithMany(p => p.DocumentListItems)
+                .HasForeignKey(d => d.DocumentListId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DocumentListItem_created_by_fkey");
+                .HasConstraintName("DocumentListItem_document_list_id_fkey");
         });
 
         modelBuilder.Entity<DocumentNote>(entity =>
@@ -126,13 +123,13 @@ public partial class xamplContext : DbContext
 
             entity.ToTable("DocumentNote");
 
-            entity.HasIndex(e => e.CreatedBy, "DocumentNote_created_by_idx");
+            entity.HasIndex(e => e.DocumentId, "DocumentNote_document_id_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.DocumentId).HasColumnName("document_id");
             entity.Property(e => e.Position)
                 .HasDefaultValueSql("'0'::smallint")
                 .HasColumnName("position");
@@ -142,10 +139,10 @@ public partial class xamplContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("text");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DocumentNotes)
-                .HasForeignKey(d => d.CreatedBy)
+            entity.HasOne(d => d.Document).WithMany(p => p.DocumentNotes)
+                .HasForeignKey(d => d.DocumentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DocumentNote_created_by_fkey");
+                .HasConstraintName("DocumentNote_document_id_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>

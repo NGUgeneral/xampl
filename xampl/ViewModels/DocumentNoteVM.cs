@@ -1,4 +1,4 @@
-﻿namespace xampl.Models.ViewModels
+﻿namespace xampl.ViewModels
 {
     public class DocumentNoteVM
     {
