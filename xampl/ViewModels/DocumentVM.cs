@@ -10,8 +10,8 @@
 
         public string Title { get; set; } = string.Empty;
 
-        public List<DocumentListVM> Lists { get; set; } = [];
+        public List<DocumentListVM> DocumentLists { get; set; } = [];
 
-        public List<DocumentNoteVM> Notes { get; set; } = [];
+        public List<DocumentNoteVM> DocumentNotes { get; set; } = [];
     }
 }

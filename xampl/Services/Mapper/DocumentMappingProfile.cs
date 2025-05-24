@@ -8,11 +8,11 @@ namespace xampl.Services.Mapper
     {
         public DocumentMappingProfile()
         {
-            CreateMap<UserDto, UserVM>().ReverseMap();
-            CreateMap<DocumentDto, DocumentVM>().ReverseMap();
-            CreateMap<DocumentNoteDto, DocumentNoteVM>().ReverseMap();
-            CreateMap<DocumentListDto, DocumentListVM>().ReverseMap();
-            CreateMap<DocumentListItemDto, DocumentListItemVM>().ReverseMap();
+            CreateMap<User, UserVM>().ReverseMap();
+            CreateMap<Document, DocumentVM>().ReverseMap();
+            CreateMap<DocumentNote, DocumentNoteVM>().ReverseMap();
+            CreateMap<DocumentList, DocumentListVM>().ReverseMap();
+            CreateMap<DocumentListItem, DocumentListItemVM>().ReverseMap();
         }
     }
 }

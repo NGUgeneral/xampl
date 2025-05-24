@@ -8,7 +8,7 @@
 
         public int CreatedBy { get; set; }
 
-        public List<DocumentListItemVM> ListItems { get; set; } = [];
+        public List<DocumentListItemVM> DocumentListItems { get; set; } = [];
 
         public short Position { get; set; }
     }
