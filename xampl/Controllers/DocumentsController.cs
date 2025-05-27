@@ -22,15 +22,13 @@ namespace xampl.Controllers
         private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
         private readonly IMapper _mapper = mapper;
 
-
-        // GET: Documents
         public async Task<IActionResult> Index()
         {
             var documentsContext = _context.Documents.Include(d => d.CreatedByNavigation);
-            return View(await documentsContext.ToListAsync());
+            var documentVMs = await documentsContext.Select(d => _mapper.Map<DocumentVM>(d)).ToListAsync();
+            return View(documentVMs);
         }
 
-        // GET: Documents/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -42,61 +40,48 @@ namespace xampl.Controllers
             return View(documentVM);
         }
 
-        // GET: Documents/Create
         public IActionResult Create()
         {
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
-        // POST: Documents/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreatedAt,CreatedBy,Title")] Document document)
+        public async Task<IActionResult> Create(DocumentVM documentVM)
         {
             if (ModelState.IsValid)
             {
+                var document = _mapper.Map<Document>(documentVM);
                 _context.Add(document);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "Id", "Email", document.CreatedBy);
-            return View(document);
+
+            return View(documentVM);
         }
 
-        // GET: Documents/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var document = await _context.Documents.FindAsync(id);
-            if (document == null)
-            {
-                return NotFound();
-            }
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "Id", "Email", document.CreatedBy);
-            return View(document);
+            if (document == null) return NotFound();
+            var documentVM = _mapper.Map<DocumentVM>(document);
+            return View(documentVM);
         }
 
-        // POST: Documents/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedAt,CreatedBy,Title")] Document document)
+        public async Task<IActionResult> Edit(int id, DocumentVM documentVM)
         {
-            if (id != document.Id)
+            if (id != documentVM.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var document = _mapper.Map<Document>(documentVM);
                 try
                 {
                     _context.Update(document);
@@ -108,15 +93,11 @@ namespace xampl.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "Id", "Email", document.CreatedBy);
-            return View(document);
+            return View(documentVM);
         }
 
         // GET: Documents/Delete/5

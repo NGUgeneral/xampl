@@ -1,4 +1,4 @@
-﻿@model xampl.Models.Documents.Document
+﻿@model xampl.ViewModels.DocumentVM
 
 @{
     ViewData["Title"] = "Delete";
@@ -22,12 +22,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedByNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedByNavigation.Email)
         </dd>
     </dl>
     
