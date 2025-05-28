@@ -44,7 +44,15 @@ namespace xampl.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var documentVM = new DocumentVM();
+            return View(documentVM);
+        }
+
+        [HttpPost]
+        public IActionResult AddNote(DocumentVM documentVM)
+        {
+            documentVM.DocumentNotes.Add(new DocumentNoteVM());
+            return View(nameof(Create), documentVM);
         }
 
         [HttpPost]
