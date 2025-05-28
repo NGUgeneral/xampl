@@ -16,27 +16,34 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DocumentNotes)
         </dt>
+        <dd class="col-sm-10"></dd>
         @foreach (var note in Model.DocumentNotes)
         {
+            <dt class="col-sm-2"></dt>
             <dd class="col-sm-10">
                 @note.Text
             </dd>
         }
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DocumentLists)
         </dt>
+        <dd class="col-sm-10"></dd>
         @foreach (var list in Model.DocumentLists)
         {
             @foreach (var listItem in list.DocumentListItems)
             {
-                <dt class="col-sm-2">
-                    @listItem.Checked
-                </dt>
+                <dt class="col-sm-2"></dt>
                 <dd class="col-sm-10">
-                    @listItem.Text
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="@listItem.Checked" checked="@listItem.Checked" disabled>
+                        @listItem.Text
+                    </div>
+                     
                 </dd>
             }
         }
