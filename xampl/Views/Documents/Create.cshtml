@@ -37,16 +37,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_DocumentScripts");}
 }
-
-<script>
-    document.getElementById('addNoteButton').addEventListener('click', function () {
-        const notesContainer = document.getElementById('DocumentNotesContainer');
-        const notesCount = notesContainer.getElementsByClassName('note-text').length;
-        let newNote = document.createElement('textarea');
-        newNote.className = 'form-control note-text';
-        newNote.name = `DocumentNotes[${notesCount}].Text`;
-        notesContainer.appendChild(newNote);
-        notesContainer.appendChild(document.createElement('br'));
-    });
-</script>
