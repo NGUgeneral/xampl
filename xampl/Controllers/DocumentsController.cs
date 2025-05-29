@@ -61,6 +61,10 @@ namespace xampl.Controllers
         {
             if (ModelState.IsValid)
             {
+                foreach (var note in documentVM.DocumentNotes)
+                {
+                    note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
+                }
                 var document = _mapper.Map<Document>(documentVM);
                 _context.Add(document);
                 await _context.SaveChangesAsync();

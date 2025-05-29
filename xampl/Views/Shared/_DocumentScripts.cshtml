@@ -1,5 +1,5 @@
 ﻿<script>
-    function updateIndexes() {
+    function updateNotesIndexes() {
         const notes = document.querySelectorAll('.noteItem');
         notes.forEach((note, index) => {
             const textarea = note.querySelector('.noteText');
@@ -15,7 +15,7 @@
         newNote.innerHTML = `
                 <textarea name="DocumentNotes[${notesCount}].Text" class="form-control noteText"></textarea>
                 <div style="text-align: right; width: 100%;">
-                    <a href="#" class="removeNote text-danger" style="font-size: 0.8em; text-decoration: none;">Remove</a>
+                    <a href="#" class="removeNote text-danger" style="font-size: 0.8em; text-decoration: none;">Remove Note</a>
                 </div>
                 <br>
             `;
@@ -23,7 +23,40 @@
         newNote.querySelector('.removeNote').addEventListener('click', function (e) {
             e.preventDefault();
             newNote.remove();
-            updateIndexes();
+            updateNotesIndexes();
+        });
+    });
+
+    function updateListsIndexes() {
+        const lists = document.querySelectorAll('.documentList');
+        lists.forEach((note, index) => {
+            list.name = `DocumentLists[${index}]`;
+        });
+    }
+
+    document.getElementById('addListButton').addEventListener('click', function () {
+        const listsContainer = document.getElementById('DocumentListsContainer');
+        const listsCount = listsContainer.getElementsByClassName('noteList').length;
+        let newList = document.createElement('div');
+        newList.innerHTML = `
+            <div class="documentList DocumentLists[${listsCount}] ">
+                <textarea asp-for="DocumentLists[${listsCount}].DocumentListItems[0].Text" class="form-control noteListItem"></textarea>
+                <div style="text-align: right; width: 100%;">
+                    <a href="#" class="removeListItem text-danger" style="font-size: 0.8em; text-decoration: none;">Remove List Item</a>
+                </div>
+                <button type="button" class="btn btn-primary" id="addListItemButton">Add List Item</button>
+                <br>
+            </div>
+            <div style="text-align: right; width: 100%;">
+                <a href="#" class="removeList text-danger" style="font-size: 0.8em; text-decoration: none;">Remove List</a>
+            </div>
+            <br>
+        `;
+        listsContainer.appendChild(newList);
+        newList.querySelector('.removeList').addEventListener('click', function (e) {
+            e.preventDefault();
+            newList.remove();
+            updateListsIndexes();
         });
     });
 </script>
