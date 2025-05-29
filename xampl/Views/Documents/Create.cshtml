@@ -13,20 +13,31 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <select asp-for="CreatedBy" class ="form-control" asp-items="ViewBag.CreatedBy"></select>
+                <label asp-for="DocumentNotes" class="control-label"></label>
+                <div id="DocumentNotesContainer">
+                    @for (int i = 0; i < Model.DocumentNotes.Count; i++)
+                    {
+                        <textarea asp-for="DocumentNotes[i].Text" class="form-control noteText"></textarea>
+                        <br/>
+                    }
+                </div>
+                <div style="text-align: right;">
+                    <button type="button" class="btn btn-sm btn-success" id="addNoteButton">Add Note</button>
+                </div>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_DocumentScripts");}
 }

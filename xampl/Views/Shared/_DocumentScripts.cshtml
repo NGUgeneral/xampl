@@ -1,0 +1,29 @@
+﻿<script>
+    function updateNotesIndexes() {
+        const notes = document.querySelectorAll('.noteItem');
+        notes.forEach((note, index) => {
+            const textarea = note.querySelector('.noteText');
+            textarea.name = `DocumentNotes[${index}].Text`;
+        });
+    }
+
+    document.getElementById('addNoteButton').addEventListener('click', function () {
+        const notesContainer = document.getElementById('DocumentNotesContainer');
+        const notesCount = notesContainer.getElementsByClassName('noteText').length;
+        let newNote = document.createElement('div');
+        newNote.className = "noteItem";
+        newNote.innerHTML = `
+                <textarea name="DocumentNotes[${notesCount}].Text" class="form-control noteText"></textarea>
+                <div style="text-align: right; width: 100%;">
+                    <a href="#" class="removeNote text-danger" style="font-size: 0.8em; text-decoration: none;">Remove Note</a>
+                </div>
+                <br>
+            `;
+        notesContainer.appendChild(newNote);
+        newNote.querySelector('.removeNote').addEventListener('click', function (e) {
+            e.preventDefault();
+            newNote.remove();
+            updateNotesIndexes();
+        });
+    });
+</script>

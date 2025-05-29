@@ -44,7 +44,15 @@ namespace xampl.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var documentVM = new DocumentVM();
+            return View(documentVM);
+        }
+
+        [HttpPost]
+        public IActionResult AddNote(DocumentVM documentVM)
+        {
+            documentVM.DocumentNotes.Add(new DocumentNoteVM());
+            return View(nameof(Create), documentVM);
         }
 
         [HttpPost]
@@ -53,6 +61,10 @@ namespace xampl.Controllers
         {
             if (ModelState.IsValid)
             {
+                foreach (var note in documentVM.DocumentNotes)
+                {
+                    note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
+                }
                 var document = _mapper.Map<Document>(documentVM);
                 _context.Add(document);
                 await _context.SaveChangesAsync();
