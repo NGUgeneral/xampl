@@ -21,26 +21,9 @@
                         <br/>
                     }
                 </div>
-                <button type="button" class="btn btn-primary" id="addNoteButton">Add Note</button>
-            </div>
-            <br/>
-            <div class="form-group">
-                <label asp-for="DocumentLists" class="control-label"></label>
-                <div id="DocumentListsContainer">
-                    @for (int i = 0; i < Model.DocumentLists.Count; i++)
-                    {
-                        <div class="noteList">
-                            @for (int j = 0; j < Model.DocumentLists[i].DocumentListItems.Count; j++)
-                            {
-                                <textarea asp-for="DocumentLists[i].DocumentListItems[j].Text" class="form-control noteListItem"></textarea>
-                            }
-                            <br/>
-                            <button type="button" class="btn btn-primary" id="addListItemButton">Add List Item</button>
-                        </div>
-                    }
-                    <br/>
+                <div style="text-align: right;">
+                    <button type="button" class="btn btn-sm btn-success" id="addNoteButton">Add Note</button>
                 </div>
-                <button type="button" class="btn btn-primary" id="addListButton">Add List</button>
             </div>
             <br />
             <div class="form-group">
