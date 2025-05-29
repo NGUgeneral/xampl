@@ -15,12 +15,14 @@ namespace xampl.Controllers
     public class DocumentsController(
         DocumentsContext context,
         IRepository<DocumentsContext> documentsRepository,
-        IMapper mapper
+        IMapper mapper,
+        ILogger<DocumentsController> logger
     ) : Controller
     {
         private readonly DocumentsContext _context = context;
         private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
         private readonly IMapper _mapper = mapper;
+        private readonly ILogger<DocumentsController> _logger = logger;
 
         public async Task<IActionResult> Index()
         {
