@@ -18,7 +18,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Documents" asp-action="Index">Documents</a>
                         </li>
@@ -26,6 +26,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
                         </li>
                     </ul>
+                    @if (!User?.Identity?.IsAuthenticated ?? true)
+                    {
+                        <a href="/Account/LoginWithGoogle" class="btn btn-light d-flex align-items-center">
+                            <img src="/images/google-logo.png" alt="Google Logo" width="20" class="me-2"> Login
+                        </a>
+                    } else {
+                        <a href="/Account/Logout" class="btn btn-light d-flex align-items-center">
+                            Logout
+                        </a>
+                    }
                 </div>
             </div>
         </nav>

@@ -45,6 +45,7 @@ namespace xampl.Controllers
         public IActionResult Create()
         {
             var documentVM = new DocumentVM();
+            //documentVM.CreatedBy = Request.User.GetUserId();
             return View(documentVM);
         }
 
@@ -66,8 +67,7 @@ namespace xampl.Controllers
                     note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
                 }
                 var document = _mapper.Map<Document>(documentVM);
-                _context.Add(document);
-                await _context.SaveChangesAsync();
+                await _documentsRepository.CreateAsync(document);
                 return RedirectToAction(nameof(Index));
             }
 
