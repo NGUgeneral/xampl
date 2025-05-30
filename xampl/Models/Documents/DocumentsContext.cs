@@ -169,6 +169,9 @@ public partial class DocumentsContext : DbContext
                 .HasDefaultValueSql("''::character varying")
                 .HasColumnType("character varying")
                 .HasColumnName("last_name");
+            entity.Property(e => e.Password)
+                .HasColumnType("character varying")
+                .HasColumnName("password");
         });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
 
