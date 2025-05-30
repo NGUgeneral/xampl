@@ -64,6 +64,7 @@ namespace xampl.Controllers
             {
                 foreach (var note in documentVM.DocumentNotes)
                 {
+                    //TODO: move this to utils;
                     note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
                 }
                 var document = _mapper.Map<Document>(documentVM);
@@ -77,8 +78,7 @@ namespace xampl.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-
-            var document = await _context.Documents.FindAsync(id);
+            var document = await _documentsRepository.GetDocumentById((int)id);
             if (document == null) return NotFound();
             var documentVM = _mapper.Map<DocumentVM>(document);
             return View(documentVM);
@@ -95,6 +95,11 @@ namespace xampl.Controllers
 
             if (ModelState.IsValid)
             {
+                foreach (var note in documentVM.DocumentNotes)
+                {
+                    //TODO: move this to utils;
+                    note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
+                }
                 var document = _mapper.Map<Document>(documentVM);
                 try
                 {
