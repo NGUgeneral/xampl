@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.login-dropdown-item:active {
+    background-color: #6c757d !important; /* Grey */
+    color: white !important; /* Adjust text color */
+}
+
+
