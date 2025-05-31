@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using xampl.Models.Documents;
 using xampl.Services.Repository;
 using xampl.ViewModels;
@@ -60,6 +61,22 @@ namespace xampl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DocumentVM documentVM)
         {
+            //TODO: wrap it all in try block and move into utils;
+            if (User.Identity is null) return Unauthorized();
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == userEmail);
+            if (user is null)
+            {
+                user = new User
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    Email = userEmail,
+                    FirstName = User.FindFirstValue(ClaimTypes.GivenName),
+                    LastName = User.FindFirstValue(ClaimTypes.Surname)
+                };
+                await _documentsRepository.CreateAsync(user);
+            }
+
             if (ModelState.IsValid)
             {
                 foreach (var note in documentVM.DocumentNotes)
@@ -67,6 +84,7 @@ namespace xampl.Controllers
                     //TODO: move this to utils;
                     note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
                 }
+                documentVM.CreatedBy = user.Id;
                 var document = _mapper.Map<Document>(documentVM);
                 await _documentsRepository.CreateAsync(document);
                 return RedirectToAction(nameof(Index));
@@ -88,10 +106,8 @@ namespace xampl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, DocumentVM documentVM)
         {
-            if (id != documentVM.Id)
-            {
-                return NotFound();
-            }
+            if (User.Identity is null) return Unauthorized();
+            if (id != documentVM.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -122,10 +138,7 @@ namespace xampl.Controllers
         // GET: Documents/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var document = await _context.Documents
                 .Include(d => d.CreatedByNavigation)
@@ -143,6 +156,7 @@ namespace xampl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (User.Identity is null) return Unauthorized();
             var document = await _context.Documents.FindAsync(id);
             if (document != null)
             {
