@@ -12,12 +12,24 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CreatedBy">
+            <input type="hidden" asp-for="CreatedAt">
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="DocumentNotes" class="control-label"></label>
                 <div id="DocumentNotesContainer">
                     @for (int i = 0; i < Model.DocumentNotes.Count; i++)
                     {
                         <textarea asp-for="DocumentNotes[i].Text" class="form-control noteText"></textarea>
+                        <div style="text-align: right; width: 100%;">
+                            @* TODO: Make this work (pass object to handler in shared DocumentScript) *@
+                            <a href="#" class="removeNote text-danger" style="font-size: 0.8em; text-decoration: none;">Remove Note</a>
+                        </div>
+                        <span asp-validation-for="DocumentNotes[i].Text" class="text-danger"></span>
                         <br />
                     }
                 </div>

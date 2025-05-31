@@ -11,5 +11,9 @@
         public string FirstName { get; set; } = string.Empty;
 
         public string LastName { get; set; } = string.Empty;
+
+        public string Source { get; set; } = string.Empty;
+
+        public List<DocumentVM> Documents { get; set; } = [];
     }
 }

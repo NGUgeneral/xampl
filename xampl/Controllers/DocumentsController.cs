@@ -62,7 +62,7 @@ namespace xampl.Controllers
         public async Task<IActionResult> Create(DocumentVM documentVM)
         {
             //TODO: wrap it all in try block and move into utils;
-            if (User.Identity is null) return Unauthorized();
+            if (!User.Identity?.IsAuthenticated ?? true) return Unauthorized();
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == userEmail);
             if (user is null)
@@ -72,7 +72,8 @@ namespace xampl.Controllers
                     CreatedAt = DateTime.UtcNow,
                     Email = userEmail,
                     FirstName = User.FindFirstValue(ClaimTypes.GivenName),
-                    LastName = User.FindFirstValue(ClaimTypes.Surname)
+                    LastName = User.FindFirstValue(ClaimTypes.Surname),
+                    Source = User.FindFirstValue(User.Identity?.AuthenticationType ?? "unknown")
                 };
                 await _documentsRepository.CreateAsync(user);
             }
@@ -85,6 +86,7 @@ namespace xampl.Controllers
                     note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
                 }
                 documentVM.CreatedBy = user.Id;
+                documentVM.LastUpdatedBy = user.Id;
                 var document = _mapper.Map<Document>(documentVM);
                 await _documentsRepository.CreateAsync(document);
                 return RedirectToAction(nameof(Index));
@@ -106,7 +108,23 @@ namespace xampl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, DocumentVM documentVM)
         {
-            if (User.Identity is null) return Unauthorized();
+            //TODO: wrap it all in try block and move into utils;
+            if (!User.Identity?.IsAuthenticated ?? true) return Unauthorized();
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == userEmail);
+            if (user is null)
+            {
+                user = new User
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    Email = userEmail,
+                    FirstName = User.FindFirstValue(ClaimTypes.GivenName),
+                    LastName = User.FindFirstValue(ClaimTypes.Surname),
+                    Source = User.FindFirstValue(User.Identity?.AuthenticationType ?? "unknown")
+                };
+                await _documentsRepository.CreateAsync(user);
+            }
+
             if (id != documentVM.Id) return NotFound();
 
             if (ModelState.IsValid)
@@ -116,11 +134,11 @@ namespace xampl.Controllers
                     //TODO: move this to utils;
                     note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
                 }
+                documentVM.LastUpdatedBy = user.Id;
                 var document = _mapper.Map<Document>(documentVM);
                 try
                 {
-                    _context.Update(document);
-                    await _context.SaveChangesAsync();
+                    await _documentsRepository.UpdateAsync(document);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

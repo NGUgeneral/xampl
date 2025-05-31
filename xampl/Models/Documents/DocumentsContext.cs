@@ -52,15 +52,23 @@ public partial class DocumentsContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.LastUpdatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("last_updated_at");
+            entity.Property(e => e.LastUpdatedBy).HasColumnName("last_updated_by");
             entity.Property(e => e.Title)
-                .HasDefaultValueSql("''::character varying")
-                .HasColumnType("character varying")
+                .HasDefaultValueSql("''::text")
                 .HasColumnName("title");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Documents)
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DocumentCreatedByNavigations)
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Document_created_by_fkey");
+
+            entity.HasOne(d => d.LastUpdatedByNavigation).WithMany(p => p.DocumentLastUpdatedByNavigations)
+                .HasForeignKey(d => d.LastUpdatedBy)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Document_last_updated_by_fkey");
         });
 
         modelBuilder.Entity<DocumentList>(entity =>
@@ -107,8 +115,6 @@ public partial class DocumentsContext : DbContext
                 .HasColumnName("position");
             entity.Property(e => e.Text)
                 .IsRequired()
-                .HasDefaultValueSql("''::character varying")
-                .HasColumnType("character varying")
                 .HasColumnName("text");
 
             entity.HasOne(d => d.DocumentList).WithMany(p => p.DocumentListItems)
@@ -135,8 +141,6 @@ public partial class DocumentsContext : DbContext
                 .HasColumnName("position");
             entity.Property(e => e.Text)
                 .IsRequired()
-                .HasDefaultValueSql("''::character varying")
-                .HasColumnType("character varying")
                 .HasColumnName("text");
 
             entity.HasOne(d => d.Document).WithMany(p => p.DocumentNotes)
@@ -159,19 +163,17 @@ public partial class DocumentsContext : DbContext
                 .HasColumnName("created_at");
             entity.Property(e => e.Email)
                 .IsRequired()
-                .HasColumnType("character varying")
                 .HasColumnName("email");
             entity.Property(e => e.FirstName)
-                .HasDefaultValueSql("''::character varying")
-                .HasColumnType("character varying")
+                .HasDefaultValueSql("''::text")
                 .HasColumnName("first_name");
             entity.Property(e => e.LastName)
-                .HasDefaultValueSql("''::character varying")
-                .HasColumnType("character varying")
+                .HasDefaultValueSql("''::text")
                 .HasColumnName("last_name");
-            entity.Property(e => e.Password)
-                .HasColumnType("character varying")
-                .HasColumnName("password");
+            entity.Property(e => e.Password).HasColumnName("password");
+            entity.Property(e => e.Source)
+                .IsRequired()
+                .HasColumnName("source");
         });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
 

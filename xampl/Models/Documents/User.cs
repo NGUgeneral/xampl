@@ -22,5 +22,9 @@ public partial class User
 
     public string Password { get; set; }
 
-    public virtual ICollection<Document> Documents { get; set; } = new List<Document>();
+    public string Source { get; set; }
+
+    public virtual ICollection<Document> DocumentCreatedByNavigations { get; set; } = new List<Document>();
+
+    public virtual ICollection<Document> DocumentLastUpdatedByNavigations { get; set; } = new List<Document>();
 }
