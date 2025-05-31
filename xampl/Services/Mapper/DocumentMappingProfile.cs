@@ -8,11 +8,37 @@ namespace xampl.Services.Mapper
     {
         public DocumentMappingProfile()
         {
-            CreateMap<User, UserVM>().ReverseMap();
-            CreateMap<Document, DocumentVM>().ReverseMap();
-            CreateMap<DocumentNote, DocumentNoteVM>().ReverseMap();
-            CreateMap<DocumentList, DocumentListVM>().ReverseMap();
-            CreateMap<DocumentListItem, DocumentListItemVM>().ReverseMap();
+            CreateMap<User, UserVM>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToUniversalTime()))
+                .ReverseMap()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedAt, DateTimeKind.Utc)));
+
+            CreateMap<Document, DocumentVM>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToUniversalTime()))
+                .ForMember(dest => dest.LastUpdatedAt, opt => opt.MapFrom(src => src.LastUpdatedAt.ToUniversalTime()))
+                .ReverseMap()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedAt, DateTimeKind.Utc)))
+                .ForMember(dest => dest.LastUpdatedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.LastUpdatedAt, DateTimeKind.Utc)));
+
+            CreateMap<User, UserVM>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToUniversalTime()))
+                .ReverseMap()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedAt, DateTimeKind.Utc))); ;
+
+            CreateMap<DocumentNote, DocumentNoteVM>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToUniversalTime()))
+                .ReverseMap()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedAt, DateTimeKind.Utc))); ;
+
+            CreateMap<DocumentList, DocumentListVM>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToUniversalTime()))
+                .ReverseMap()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedAt, DateTimeKind.Utc))); ;
+
+            CreateMap<DocumentListItem, DocumentListItemVM>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToUniversalTime()))
+                .ReverseMap()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedAt, DateTimeKind.Utc))); ;
         }
     }
 }
