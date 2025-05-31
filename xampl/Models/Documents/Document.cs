@@ -15,9 +15,15 @@ public partial class Document
 
     public string Title { get; set; }
 
+    public DateTime LastUpdatedAt { get; set; }
+
+    public int LastUpdatedBy { get; set; }
+
     public virtual User CreatedByNavigation { get; set; }
 
     public virtual ICollection<DocumentList> DocumentLists { get; set; } = new List<DocumentList>();
 
     public virtual ICollection<DocumentNote> DocumentNotes { get; set; } = new List<DocumentNote>();
+
+    public virtual User LastUpdatedByNavigation { get; set; }
 }

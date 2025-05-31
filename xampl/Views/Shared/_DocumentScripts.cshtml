@@ -17,6 +17,7 @@
                 <div style="text-align: right; width: 100%;">
                     <a href="#" class="removeNote text-danger" style="font-size: 0.8em; text-decoration: none;">Remove Note</a>
                 </div>
+                <span asp-validation-for="DocumentNotes[${notesCount}].Text" class="text-danger"></span>
                 <br>
             `;
         notesContainer.appendChild(newNote);

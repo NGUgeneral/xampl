@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <None Include="..\README.md" Link="README.md" />
-    <None Include="efpt.config.json.user" />
+    <None Include="Models\Documents\efpt.config.json.user" />
   </ItemGroup>
 
   <ItemGroup>
