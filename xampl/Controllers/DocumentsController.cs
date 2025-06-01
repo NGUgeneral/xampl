@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using xampl.Models.Documents;
 using xampl.Services.Repository;
 using xampl.ViewModels;
@@ -14,21 +9,20 @@ using xampl.ViewModels;
 namespace xampl.Controllers
 {
     public class DocumentsController(
-        DocumentsContext context,
         IRepository<DocumentsContext> documentsRepository,
         IMapper mapper,
         ILogger<DocumentsController> logger
     ) : Controller
     {
-        private readonly DocumentsContext _context = context;
         private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<DocumentsController> _logger = logger;
 
         public async Task<IActionResult> Index()
         {
-            var documentsContext = _context.Documents.Include(d => d.CreatedByNavigation);
-            var documentVMs = await documentsContext.Select(d => _mapper.Map<DocumentVM>(d)).ToListAsync();
+            var documentVMs = await _documentsRepository.GetAllAsQueryable<Document>()
+                .Select(d => _mapper.Map<DocumentVM>(d))
+                .ToListAsync();
             return View(documentVMs);
         }
 
@@ -142,7 +136,7 @@ namespace xampl.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DocumentExists(document.Id))
+                    if (!await DocumentExists(document.Id))
                     {
                         return NotFound();
                     }
@@ -153,41 +147,26 @@ namespace xampl.Controllers
             return View(documentVM);
         }
 
-        // GET: Documents/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var document = await _context.Documents
-                .Include(d => d.CreatedByNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (document == null)
-            {
-                return NotFound();
-            }
-
-            return View(document);
-        }
-
         // POST: Documents/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (User.Identity is null) return Unauthorized();
-            var document = await _context.Documents.FindAsync(id);
-            if (document != null)
+            var document = await _documentsRepository.GetAllAsQueryable<Document>()
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (document is not null)
             {
-                _context.Documents.Remove(document);
+                await _documentsRepository.DeleteAsync(document);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DocumentExists(int id)
+        private async Task<bool> DocumentExists(int id)
         {
-            return _context.Documents.Any(e => e.Id == id);
+            return await _documentsRepository.GetAllAsQueryable<Document>()
+                .AnyAsync(x => x.Id == id);
         }
     }
 }
