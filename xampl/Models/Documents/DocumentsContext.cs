@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using xampl.ViewModels;
 
 namespace xampl.Models.Documents;
 
@@ -181,4 +182,6 @@ public partial class DocumentsContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<xampl.ViewModels.UserVM> UserVM { get; set; } = default!;
 }
