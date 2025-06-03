@@ -10,9 +10,11 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="View">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <input type="hidden" asp-for="Source" />
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -33,12 +35,37 @@
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+        <br/>
+        <input type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" value="Delete">
     </div>
 </div>
 
 <br />
 <div>
     <a asp-action="Index">Back to List</a>
+</div>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form asp-action="Delete" asp-route-id="@Model?.Id">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Delete User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        You about to delete this User.<br>
+                        Are you sure about this action?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

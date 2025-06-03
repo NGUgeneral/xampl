@@ -41,15 +41,13 @@ namespace xampl.Controllers
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserVM userVM)
         {
             if (ModelState.IsValid)
             {
+                userVM.Source = "xampl";
                 await _documentsRepository.CreateAsync(_mapper.Map<User>(userVM));
                 return RedirectToAction(nameof(Index));
             }
