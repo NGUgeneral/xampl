@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using xampl.ViewModels;
+@await Html.PartialAsync("_LoginModal", new LoginVM())
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -33,6 +36,11 @@
                                 Login
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a href="#" class="dropdown-item d-flex align-items-center text-dark login-dropdown-item" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                        <img src="/images/user-logo.png" alt="User Logo" width="20" class="me-2"> Sign in
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="/Account/LoginWithGoogle" class="dropdown-item d-flex align-items-center text-dark login-dropdown-item">
                                         <img src="/images/google-logo.png" alt="Google Logo" width="20" class="me-2"> Sign in with Google
