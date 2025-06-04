@@ -47,7 +47,6 @@ namespace xampl.Controllers
         {
             if (ModelState.IsValid)
             {
-                userVM.Source = "xampl";
                 await _documentsRepository.CreateAsync(_mapper.Map<User>(userVM));
                 return RedirectToAction(nameof(Index));
             }
