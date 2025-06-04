@@ -50,9 +50,18 @@
                         </div>
                         
                     } else {
-                        <a href="/Account/Logout" class="btn btn-light d-flex align-items-center text-dark focus-ring">
-                            Logout
-                        </a>
+                        <div class="navbar-nav d-flex align-items-center">
+                            @if (User?.Identity?.AuthenticationType == "Google")
+                            {
+                                <img src="/images/google-logo.png" class="me-2 nav-item" width="20" alt="User">
+                            } else
+                            {
+                                <img src="/images/user-logo.png" class="me-2 nav-item" width="20" alt="User">
+                            }
+                            <a href="/Account/Logout" class="btn btn-light nav-item text-dark focus-ring">
+                                Logout
+                            </a>
+                        </div>
                     }
                 </div>
             </div>
