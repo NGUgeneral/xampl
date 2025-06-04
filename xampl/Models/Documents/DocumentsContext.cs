@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using xampl.ViewModels;
 
 namespace xampl.Models.Documents;
 
@@ -171,9 +170,10 @@ public partial class DocumentsContext : DbContext
             entity.Property(e => e.LastName)
                 .HasDefaultValueSql("''::text")
                 .HasColumnName("last_name");
-            entity.Property(e => e.Password).HasColumnName("password");
+            entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
             entity.Property(e => e.Source)
                 .IsRequired()
+                .HasDefaultValueSql("'xampl'::text")
                 .HasColumnName("source");
         });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
@@ -182,6 +182,4 @@ public partial class DocumentsContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-public DbSet<xampl.ViewModels.UserVM> UserVM { get; set; } = default!;
 }
