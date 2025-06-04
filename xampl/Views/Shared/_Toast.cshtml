@@ -1,0 +1,26 @@
+﻿<div class="toast-container position-fixed bottom-0 end-0 p-5" data-bs-delay="3000">
+    <div id="toastWrapper" class="toast align-items-center p-1" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="toastMessage"></span>
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        console.log('BING!');
+        handleToastMessage('@ViewBag.ToastMessage', '@ViewBag.ToastIsAlert');
+    });
+
+    function handleToastMessage(toastMessage, isAlert = false) {
+        if (!!!toastMessage) return;
+        const toast = new bootstrap.Toast($("#toastWrapper"));
+        const messageColor = isAlert === "True" ? "darkred" : "darkgreen";
+        $("#toastMessage").css("color", messageColor);
+        $("#toastMessage").append(toastMessage);
+        toast.show();
+    };
+</script>

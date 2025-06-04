@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 using xampl.Models;
+using xampl.Models.Documents;
+using xampl.Utils;
 
 namespace xampl.Controllers
 {
@@ -15,6 +18,11 @@ namespace xampl.Controllers
 
         public IActionResult Index()
         {
+            if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                ToastUtils.SetData(TempData, $"Welcome {User.FindFirstValue(ClaimTypes.GivenName)}");
+            }
+            ToastUtils.BindData(ViewBag, TempData);
             return View();
         }
 
