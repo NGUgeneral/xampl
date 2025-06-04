@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using xampl.Models.Documents;
 using xampl.Services.Repository;
+using xampl.Utils;
 using xampl.ViewModels;
 
 namespace xampl.Controllers
@@ -20,6 +21,7 @@ namespace xampl.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
+            ToastUtils.BindData(ViewBag, TempData);
             return View(await _documentsRepository.GetAllAsQueryable<User>().ToListAsync());
         }
 

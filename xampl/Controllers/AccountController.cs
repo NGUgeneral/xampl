@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using xampl.Models.Documents;
 using xampl.Services.Repository;
+using xampl.Utils;
 using xampl.ViewModels;
 
 namespace xampl.Controllers
@@ -39,11 +40,9 @@ namespace xampl.Controllers
                 var principal = new ClaimsPrincipal(identity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
                 return RedirectToAction("Index", "About");
             }
-            // TODO: Add validation error message and show it in error-toast
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ToastUtils.SetData(TempData, "Invalid login attempt", true);
             return RedirectToAction("Index", "About");
         }
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using xampl.Models.Documents;
 using xampl.Services.Repository;
+using xampl.Utils;
 using xampl.ViewModels;
 
 namespace xampl.Controllers
@@ -20,6 +21,7 @@ namespace xampl.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ToastUtils.BindData(ViewBag, TempData);
             var documentVMs = await _documentsRepository.GetAllAsQueryable<Document>()
                 .Select(d => _mapper.Map<DocumentVM>(d))
                 .ToListAsync();
