@@ -16,6 +16,7 @@ try
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
+    ConfigHelper.Initialize(builder.Configuration);
     builder.Services.AddAutoMapper(typeof(Program));
     // Add services to the container.
     builder.Services.AddControllersWithViews();

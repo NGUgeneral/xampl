@@ -20,9 +20,9 @@ namespace xampl.Utils
                     Source = principal.Identity?.AuthenticationType
                 };
                 var dataJson = JsonConvert.SerializeObject(data);
+                var domain = ConfigHelper.GetSetting("Variables:Domain");
                 var response = await httpClient.PostAsync(
-                    //TODO: domain from appsettings;
-                    "https://localhost:7249/Account/RegisterExternalUser",
+                    $"https://{domain}/Account/RegisterExternalUser",
                     new StringContent(dataJson, Encoding.UTF8, "application/json")
                 );
             }
