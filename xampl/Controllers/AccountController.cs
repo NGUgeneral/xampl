@@ -76,6 +76,7 @@ namespace xampl.Controllers
         }
 
         [HttpPost]
+        //TODO: make me private;
         public async Task RegisterExternalUser([FromBody] ExternalUserRegistrationDTO data)
         {
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == data.Email);

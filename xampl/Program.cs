@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 using xampl.Models.Documents;
+using xampl.Services.ConfigOptions;
 using xampl.Services.Repository;
 using xampl.Utils;
 
@@ -17,6 +18,9 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
     ConfigHelper.Initialize(builder.Configuration);
+    builder.Services.Configure<ConfigOptions>(
+        builder.Configuration.GetSection(ConfigOptions.ConfigVariablesSectionKey)
+    );
     builder.Services.AddAutoMapper(typeof(Program));
     // Add services to the container.
     builder.Services.AddControllersWithViews();
