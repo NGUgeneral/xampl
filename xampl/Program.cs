@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 using xampl.Models.Documents;
+using xampl.Services.ConfigOptions;
 using xampl.Services.Repository;
+using xampl.Utils;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -15,6 +17,10 @@ try
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
+    ConfigUtils.Initialize(builder.Configuration);
+    builder.Services.Configure<ConfigOptions>(
+        builder.Configuration.GetSection(ConfigOptions.ConfigVariablesSectionKey)
+    );
     builder.Services.AddAutoMapper(typeof(Program));
     // Add services to the container.
     builder.Services.AddControllersWithViews();
@@ -36,8 +42,13 @@ try
     .AddCookie()
     .AddGoogle(options =>
         {
-            options.ClientId = "883317320856-av6bko0isehpijrro566ttb3iq8a7qqo.apps.googleusercontent.com";
-            options.ClientSecret = "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";
+            options.ClientId = builder?.Configuration["Variables:GoogleAuthClientId"] ?? string.Empty;
+            options.ClientSecret = builder?.Configuration["Variables:GoogleAuthClientSecret"] ?? string.Empty;
+            options.Events.OnCreatingTicket = context =>
+            {
+                Task.Run(async () => await AccountUtils.MaybeRegisterExternalUser(context.Principal));
+                return Task.CompletedTask;
+            };
         });
 
     builder.Services.AddAuthorization();
