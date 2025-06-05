@@ -37,11 +37,12 @@ try
     .AddCookie()
     .AddGoogle(options =>
         {
-            options.ClientId = "883317320856-av6bko0isehpijrro566ttb3iq8a7qqo.apps.googleusercontent.com";
-            options.ClientSecret = "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";
-            options.Events.OnCreatingTicket = async context =>
+            options.ClientId = builder?.Configuration["Variables:GoogleAuthClientId"] ?? string.Empty;
+            options.ClientSecret = builder?.Configuration["Variables:GoogleAuthClientSecret"] ?? string.Empty;
+            options.Events.OnCreatingTicket = context =>
             {
-                await Account.MaybeRegisterExternalUser(context.Principal);
+                Task.Run(async () => await Account.MaybeRegisterExternalUser(context.Principal));
+                return Task.CompletedTask;
             };
         });
 
