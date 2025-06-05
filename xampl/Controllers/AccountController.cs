@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Security.Claims;
 using xampl.Models.Documents;
 using xampl.Models.DTO;
@@ -19,11 +20,22 @@ namespace xampl.Controllers
         private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
             var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
-            if (user != null && user.PasswordHash == passwordHash)
+            if (user is null)
+            {
+                ToastUtils.SetData(TempData, "No user registered with specified email", true);
+                return RedirectToAction("Index", "About");
+            }
+            if (string.IsNullOrEmpty(user.PasswordHash))
+            {
+                loginVM.Password = string.Empty;
+                return View(nameof(CreatePassword), loginVM);
+            }
+            if (user.PasswordHash == passwordHash)
             {
                 //TODO: move this logic to claims transformer;
                 //TODO: add JWT token;
@@ -41,8 +53,30 @@ namespace xampl.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
                 return RedirectToAction("Index", "About");
             }
+
             ToastUtils.SetData(TempData, "Invalid login attempt", true);
             return RedirectToAction("Index", "About");
+        }
+
+        [HttpGet]
+        public IActionResult CreatePassword(LoginVM loginVM)
+        {
+            return View(loginVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePasswordSubmit(LoginVM loginVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
+                var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
+                user.PasswordHash = AccountUtils.ConvertToMD5(passwordHash);
+                await _documentsRepository.UpdateAsync(user);
+                return RedirectToAction("Index", "About");
+            }
+            return View(loginVM);
         }
 
         [HttpGet]
@@ -60,6 +94,7 @@ namespace xampl.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         //TODO: make me private;
         public async Task RegisterExternalUser([FromBody] ExternalUserRegistrationDTO data)
         {
