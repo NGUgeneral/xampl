@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using xampl.Models.Documents;
 using xampl.Models.DTO;
 using xampl.Services.Repository;
@@ -23,7 +21,7 @@ namespace xampl.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
-            var passwordHash = ConvertToMD5(loginVM.Password);
+            var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
             if (user != null && user.PasswordHash == passwordHash)
             {
@@ -46,20 +44,6 @@ namespace xampl.Controllers
             ToastUtils.SetData(TempData, "Invalid login attempt", true);
             return RedirectToAction("Index", "About");
         }
-
-        private static string ConvertToMD5(string input)
-        {
-            //TODO: move this to utils;
-            var inputBytes = Encoding.UTF8.GetBytes(input);
-            var hashBytes = MD5.HashData(inputBytes);
-            var sb = new StringBuilder();
-            foreach (var b in hashBytes)
-            {
-                sb.Append(b.ToString("x2"));
-            }
-            return sb.ToString();
-        }
-
 
         [HttpGet]
         public IActionResult LoginWithGoogle()

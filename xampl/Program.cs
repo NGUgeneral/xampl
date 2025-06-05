@@ -17,7 +17,7 @@ try
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
-    ConfigHelper.Initialize(builder.Configuration);
+    ConfigUtils.Initialize(builder.Configuration);
     builder.Services.Configure<ConfigOptions>(
         builder.Configuration.GetSection(ConfigOptions.ConfigVariablesSectionKey)
     );
@@ -46,7 +46,7 @@ try
             options.ClientSecret = builder?.Configuration["Variables:GoogleAuthClientSecret"] ?? string.Empty;
             options.Events.OnCreatingTicket = context =>
             {
-                Task.Run(async () => await Account.MaybeRegisterExternalUser(context.Principal));
+                Task.Run(async () => await AccountUtils.MaybeRegisterExternalUser(context.Principal));
                 return Task.CompletedTask;
             };
         });

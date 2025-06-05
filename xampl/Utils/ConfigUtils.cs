@@ -1,7 +1,7 @@
 ﻿#nullable disable
 namespace xampl.Utils
 {
-    public static class ConfigHelper
+    public static class ConfigUtils
     {
         public static IConfiguration Configuration { get; private set; }
 
