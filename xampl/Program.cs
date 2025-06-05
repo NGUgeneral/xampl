@@ -5,6 +5,7 @@ using NLog;
 using NLog.Web;
 using xampl.Models.Documents;
 using xampl.Services.Repository;
+using xampl.Utils;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -38,6 +39,10 @@ try
         {
             options.ClientId = "883317320856-av6bko0isehpijrro566ttb3iq8a7qqo.apps.googleusercontent.com";
             options.ClientSecret = "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";
+            options.Events.OnCreatingTicket = async context =>
+            {
+                await Account.MaybeRegisterExternalUser(context.Principal);
+            };
         });
 
     builder.Services.AddAuthorization();

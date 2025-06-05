@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using xampl.Models.Documents;
+using xampl.Models.DTO;
 using xampl.Services.Repository;
 using xampl.Utils;
 using xampl.ViewModels;
@@ -72,6 +73,23 @@ namespace xampl.Controllers
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "About");
+        }
+
+        [HttpPost]
+        public async Task RegisterExternalUser([FromBody] ExternalUserRegistrationDTO data)
+        {
+            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == data.Email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = data.FirstName,
+                    LastName = data.LastName,
+                    Email = data.Email,
+                    Source = data.Source,
+                };
+                await _documentsRepository.CreateAsync(user);
+            }
         }
     }
 }
