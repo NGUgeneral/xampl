@@ -1,3 +1,4 @@
+using dotenv.net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentCla
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    ConfigUtils.LoadAndReplaceEnvironmentVariables(builder.Configuration);
 
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
