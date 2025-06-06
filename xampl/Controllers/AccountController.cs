@@ -119,8 +119,8 @@ namespace xampl.Controllers
                 new Dictionary<string, string>
                 {
                     { "Subject", "Xampl Password Reset" },
-                    { "Header", string.Empty },
-                    { "Body", $"A password reset has been requested.<br/>The new password is: <b>{newPassword}</b>" }
+                    { "Header", "Here is that new password you asked for" },
+                    { "Body", $"A password reset has been requested for account associated with your email.<br/><br/>The new password is: <b>{newPassword}</b>" }
                 }
             );
             await _emailSender.SendEmailAsync(
