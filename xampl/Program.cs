@@ -15,25 +15,7 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    DotEnv.Load();
-    builder.Configuration
-        .AddEnvironmentVariables()
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
-    // Manually replace placeholders in configuration
-    var configDictionary = new Dictionary<string, string?>();
-    foreach (var kvp in builder.Configuration.AsEnumerable())
-    {
-        if (kvp.Value != null && kvp.Value.StartsWith("${") && kvp.Value.EndsWith('}'))
-        {
-            var envVarValue = Environment.GetEnvironmentVariable(kvp.Value[2..^1]);
-            if (!string.IsNullOrEmpty(envVarValue))
-            {
-                configDictionary[kvp.Key] = envVarValue;
-            }
-        }
-    }
-    builder.Configuration.AddInMemoryCollection(configDictionary);
+    ConfigUtils.LoadAndReplaceEnvironmentVariables(builder.Configuration);
 
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
