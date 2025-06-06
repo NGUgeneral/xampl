@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using System.Security.Claims;
 using xampl.Models.Documents;
 using xampl.Models.DTO;
+using xampl.Services.EmailSenderService;
 using xampl.Services.RepositoryService;
 using xampl.Utils;
 using xampl.ViewModels;
@@ -14,10 +15,12 @@ using xampl.ViewModels;
 namespace xampl.Controllers
 {
     public class AccountController(
-        IRepository<DocumentsContext> documentsRepository
+        IRepository<DocumentsContext> documentsRepository,
+        EmailSender emailSender
     ) : Controller
     {
         private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
+        private readonly EmailSender _emailSender = emailSender;
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -62,6 +65,24 @@ namespace xampl.Controllers
         public IActionResult CreatePassword(LoginVM loginVM)
         {
             return View(loginVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(LoginVM loginVM)
+        {
+            //TODO: replace with generated;
+            var newPassword = "newPassword";
+            var passwordHash = AccountUtils.ConvertToMD5(newPassword);
+            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
+            user.PasswordHash = AccountUtils.ConvertToMD5(passwordHash);
+            await _documentsRepository.UpdateAsync(user);
+            await _emailSender.SendEmailAsync(
+                toEmail: user.Email,
+                subject: "Reset Password",
+                message: $"Your new password is: {newPassword}"
+            );
+            ToastUtils.SetData(TempData, $"Password was reset and email with new password was sent to {user.Email}");
+            return RedirectToAction("Index", "About");
         }
 
         [HttpPost]
