@@ -30,18 +30,16 @@ namespace xampl.Controllers
             {
                 return View(nameof(ResetPassword), loginVM);
             }
-
+            if (string.IsNullOrEmpty(loginVM.Password))
+            {
+                return View(nameof(CreatePassword), loginVM);
+            }
             var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
             if (user is null)
             {
                 ToastUtils.SetData(TempData, "No user registered with specified email", true);
                 return RedirectToAction("Index", "About");
-            }
-            if (string.IsNullOrEmpty(user.PasswordHash))
-            {
-                loginVM.Password = string.Empty;
-                return View(nameof(CreatePassword), loginVM);
             }
             if (user.PasswordHash == passwordHash)
             {
@@ -110,15 +108,25 @@ namespace xampl.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPasswordSubmit(LoginVM loginVM)
         {
+            //TODO: handle email different from the one in login form;
             var newPassword = AccountUtils.GeneratePassword(8);
             var passwordHash = AccountUtils.ConvertToMD5(newPassword);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
             user.PasswordHash = passwordHash;
             await _documentsRepository.UpdateAsync(user);
+            var emailTemplateHtml = await _emailSender.LoadEmailTemplateAsync(
+                "ResetPassword",
+                new Dictionary<string, string>
+                {
+                    { "Subject", "Xampl Password Reset" },
+                    { "Header", string.Empty },
+                    { "Body", $"A password reset has been requested.<br/>The new password is: <b>{newPassword}</b>" }
+                }
+            );
             await _emailSender.SendEmailAsync(
                 toEmail: user.Email,
                 subject: "Reset Password",
-                message: $"Your new password is: {newPassword}"
+                htmlBody: emailTemplateHtml
             );
             ToastUtils.SetData(TempData, $"Password was reset and email with new password was sent to {user.Email}");
             return RedirectToAction("Index", "About");
