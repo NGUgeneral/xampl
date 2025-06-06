@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Security.Claims;
 using xampl.Models.Documents;
 using xampl.Models.DTO;
@@ -111,8 +110,7 @@ namespace xampl.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPasswordSubmit(LoginVM loginVM)
         {
-            //TODO: replace with generated;
-            var newPassword = "newPassword";
+            var newPassword = AccountUtils.GeneratePassword(8);
             var passwordHash = AccountUtils.ConvertToMD5(newPassword);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
             user.PasswordHash = passwordHash;
