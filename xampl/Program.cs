@@ -2,11 +2,13 @@ using dotenv.net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Web;
 using xampl.Models.Documents;
-using xampl.Services.ConfigOptions;
-using xampl.Services.Repository;
+using xampl.Services.ConfigOptionsService;
+using xampl.Services.EmailSenderService;
+using xampl.Services.RepositoryService;
 using xampl.Utils;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -21,9 +23,12 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
     ConfigUtils.Initialize(builder.Configuration);
-    builder.Services.Configure<ConfigOptions>(
-        builder.Configuration.GetSection(ConfigOptions.ConfigVariablesSectionKey)
-    );
+    builder.Services.Configure<ConfigOptions>(options =>
+        {
+            builder.Configuration.GetSection(ConfigOptions.ConfigVariablesSectionKey).Bind(options);
+            builder.Configuration.GetSection(ConfigOptions.ConfigSmtpSettingsSectionKey).Bind(options.SmtpSettings);
+        });
+    builder.Services.AddSingleton<EmailSender>();
     builder.Services.AddAutoMapper(typeof(Program));
     // Add services to the container.
     builder.Services.AddControllersWithViews();

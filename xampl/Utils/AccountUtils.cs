@@ -40,5 +40,23 @@ namespace xampl.Utils
             }
             return sb.ToString();
         }
+
+        public static string GeneratePassword(int length)
+        {
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*";
+            var result = new StringBuilder();
+            var byteArray = new byte[length];
+
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(byteArray);
+                for (int i = 0; i < length; i++)
+                {
+                    result.Append(validChars[byteArray[i] % validChars.Length]);
+                }
+            }
+
+            return result.ToString();
+        }
     }
 }

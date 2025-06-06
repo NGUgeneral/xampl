@@ -2,7 +2,7 @@
 using xampl.Models.Documents;
 using xampl.ViewModels;
 
-namespace xampl.Services.Mapper
+namespace xampl.Services.MapperService
 {
     public class DocumentMappingProfile : Profile
     {

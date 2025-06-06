@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using xampl.Models.Documents;
-namespace xampl.Services.Repository
+namespace xampl.Services.RepositoryService
 {
     public interface IDocumentRepository
     {

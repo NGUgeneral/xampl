@@ -3,26 +3,34 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Security.Claims;
 using xampl.Models.Documents;
 using xampl.Models.DTO;
-using xampl.Services.Repository;
+using xampl.Services.EmailSenderService;
+using xampl.Services.RepositoryService;
 using xampl.Utils;
 using xampl.ViewModels;
 
 namespace xampl.Controllers
 {
     public class AccountController(
-        IRepository<DocumentsContext> documentsRepository
+        IRepository<DocumentsContext> documentsRepository,
+        EmailSender emailSender
     ) : Controller
     {
         private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
+        private readonly EmailSender _emailSender = emailSender;
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginVM loginVM)
+        public async Task<IActionResult> Login(LoginVM loginVM, string action)
         {
+            //TODO: refactor me. Just too many things are described here;
+            if (action == "reset")
+            {
+                return View(nameof(ResetPassword), loginVM);
+            }
+
             var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
             if (user is null)
@@ -59,6 +67,20 @@ namespace xampl.Controllers
         }
 
         [HttpGet]
+        public IActionResult LoginWithGoogle()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = "/" };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "About");
+        }
+
+        [HttpGet]
         public IActionResult CreatePassword(LoginVM loginVM)
         {
             return View(loginVM);
@@ -72,24 +94,33 @@ namespace xampl.Controllers
             {
                 var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
                 var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
-                user.PasswordHash = AccountUtils.ConvertToMD5(passwordHash);
+                user.PasswordHash = passwordHash;
                 await _documentsRepository.UpdateAsync(user);
                 return RedirectToAction("Index", "About");
             }
             return View(loginVM);
         }
 
-        [HttpGet]
-        public IActionResult LoginWithGoogle()
+        [HttpPost]
+        public IActionResult ResetPassword(LoginVM loginVM)
         {
-            var properties = new AuthenticationProperties { RedirectUri = "/" };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            return View(loginVM);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Logout()
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordSubmit(LoginVM loginVM)
         {
-            await HttpContext.SignOutAsync();
+            var newPassword = AccountUtils.GeneratePassword(8);
+            var passwordHash = AccountUtils.ConvertToMD5(newPassword);
+            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
+            user.PasswordHash = passwordHash;
+            await _documentsRepository.UpdateAsync(user);
+            await _emailSender.SendEmailAsync(
+                toEmail: user.Email,
+                subject: "Reset Password",
+                message: $"Your new password is: {newPassword}"
+            );
+            ToastUtils.SetData(TempData, $"Password was reset and email with new password was sent to {user.Email}");
             return RedirectToAction("Index", "About");
         }
 
