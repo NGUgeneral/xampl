@@ -19,14 +19,15 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="@Model.Password" class="form-label">Password</label>
-                        <input type="password" asp-for="@Model.Password" type="password" class="form-control" required />
+                        <input type="password" asp-for="@Model.Password" type="password" class="form-control" />
                         <span asp-validation-for="@Model.Password" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Login</button>
+                    <button type="submit" name="action" value="login" class="btn btn-success">Login</button>
                 </div>
+                <button type="submit" name="action" value="reset" class="btn btn-link">Forgot Password?</button>
             </form>
         </div>
     </div>

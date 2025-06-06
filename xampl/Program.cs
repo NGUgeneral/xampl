@@ -25,8 +25,8 @@ try
     ConfigUtils.Initialize(builder.Configuration);
     builder.Services.Configure<ConfigOptions>(options =>
         {
-            builder.Configuration.GetSection(ConfigOptions.ConfigVariablesSectionKey);
-            builder.Configuration.GetSection(ConfigOptions.ConfigSmtpSettingsSectionKey);
+            builder.Configuration.GetSection(ConfigOptions.ConfigVariablesSectionKey).Bind(options);
+            builder.Configuration.GetSection(ConfigOptions.ConfigSmtpSettingsSectionKey).Bind(options.SmtpSettings);
         });
     builder.Services.AddSingleton<EmailSender>();
     builder.Services.AddAutoMapper(typeof(Program));

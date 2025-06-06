@@ -24,8 +24,14 @@ namespace xampl.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginVM loginVM)
+        public async Task<IActionResult> Login(LoginVM loginVM, string action)
         {
+            //TODO: refactor me. Just too many things are described here;
+            if (action == "reset")
+            {
+                return View(nameof(ResetPassword), loginVM);
+            }
+
             var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
             var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
             if (user is null)
@@ -62,45 +68,6 @@ namespace xampl.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreatePassword(LoginVM loginVM)
-        {
-            return View(loginVM);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ResetPassword(LoginVM loginVM)
-        {
-            //TODO: replace with generated;
-            var newPassword = "newPassword";
-            var passwordHash = AccountUtils.ConvertToMD5(newPassword);
-            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
-            user.PasswordHash = AccountUtils.ConvertToMD5(passwordHash);
-            await _documentsRepository.UpdateAsync(user);
-            await _emailSender.SendEmailAsync(
-                toEmail: user.Email,
-                subject: "Reset Password",
-                message: $"Your new password is: {newPassword}"
-            );
-            ToastUtils.SetData(TempData, $"Password was reset and email with new password was sent to {user.Email}");
-            return RedirectToAction("Index", "About");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePasswordSubmit(LoginVM loginVM)
-        {
-            if (ModelState.IsValid)
-            {
-                var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
-                var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
-                user.PasswordHash = AccountUtils.ConvertToMD5(passwordHash);
-                await _documentsRepository.UpdateAsync(user);
-                return RedirectToAction("Index", "About");
-            }
-            return View(loginVM);
-        }
-
-        [HttpGet]
         public IActionResult LoginWithGoogle()
         {
             var properties = new AuthenticationProperties { RedirectUri = "/" };
@@ -111,6 +78,51 @@ namespace xampl.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "About");
+        }
+
+        [HttpGet]
+        public IActionResult CreatePassword(LoginVM loginVM)
+        {
+            return View(loginVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePasswordSubmit(LoginVM loginVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
+                var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
+                user.PasswordHash = passwordHash;
+                await _documentsRepository.UpdateAsync(user);
+                return RedirectToAction("Index", "About");
+            }
+            return View(loginVM);
+        }
+
+        [HttpPost]
+        public IActionResult ResetPassword(LoginVM loginVM)
+        {
+            return View(loginVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordSubmit(LoginVM loginVM)
+        {
+            //TODO: replace with generated;
+            var newPassword = "newPassword";
+            var passwordHash = AccountUtils.ConvertToMD5(newPassword);
+            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstAsync(x => x.Email == loginVM.Email);
+            user.PasswordHash = passwordHash;
+            await _documentsRepository.UpdateAsync(user);
+            await _emailSender.SendEmailAsync(
+                toEmail: user.Email,
+                subject: "Reset Password",
+                message: $"Your new password is: {newPassword}"
+            );
+            ToastUtils.SetData(TempData, $"Password was reset and email with new password was sent to {user.Email}");
             return RedirectToAction("Index", "About");
         }
 
