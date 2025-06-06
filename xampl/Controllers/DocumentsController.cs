@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using xampl.Models.Documents;
-using xampl.Services.Repository;
+using xampl.Services.RepositoryService;
 using xampl.Utils;
 using xampl.ViewModels;
 

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using System.Security.Claims;
 using xampl.Models.Documents;
 using xampl.Models.DTO;
-using xampl.Services.Repository;
+using xampl.Services.RepositoryService;
 using xampl.Utils;
 using xampl.ViewModels;
 

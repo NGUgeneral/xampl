@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace xampl.Services.Repository
+namespace xampl.Services.RepositoryService
 {
     public partial class Repository<TDbContext> : IRepository<TDbContext> where TDbContext : DbContext
     {

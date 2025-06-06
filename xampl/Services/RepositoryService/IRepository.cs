@@ -1,4 +1,4 @@
-﻿namespace xampl.Services.Repository
+﻿namespace xampl.Services.RepositoryService
 {
     public interface IRepository<TContext> :
         IDocumentRepository
