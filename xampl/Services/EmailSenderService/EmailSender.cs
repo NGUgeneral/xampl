@@ -14,7 +14,7 @@ namespace xampl.Services.EmailSenderService
         private readonly ConfigOptions _config = configOptions.Value;
         private readonly ILogger<EmailSender> _logger = logger;
 
-        public async Task SendEmailAsync(string toEmail, string subject, string message)
+        public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
         {
             try
             {
@@ -22,8 +22,7 @@ namespace xampl.Services.EmailSenderService
                 email.From.Add(new MailboxAddress(_config.SmtpSettings.FromName, _config.SmtpSettings.FromEmail));
                 email.To.Add(new MailboxAddress("Recipient", toEmail));
                 email.Subject = subject;
-                //TODO: replace me with HTML support;
-                email.Body = new TextPart("plain") { Text = message };
+                email.Body = new TextPart("html") { Text = htmlBody };
 
                 using var smtp = new SmtpClient();
                 await smtp.ConnectAsync(_config.SmtpSettings.Server, _config.SmtpSettings.Port, SecureSocketOptions.StartTls);
@@ -36,6 +35,24 @@ namespace xampl.Services.EmailSenderService
                 _logger.LogError("{log_message}", ex.Message);
             }
         }
+
+        public async Task<string> LoadEmailTemplateAsync(string templateName, Dictionary<string, string> placeholders)
+        {
+            var templatePath = Path.Combine("Services/EmailSenderService/Templates", $"{templateName}.html");
+
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException("Template not found.");
+
+            var templateContent = await File.ReadAllTextAsync(templatePath);
+
+            foreach (var placeholder in placeholders)
+            {
+                templateContent = templateContent.Replace($"{{{{{placeholder.Key}}}}}", placeholder.Value);
+            }
+
+            return templateContent;
+        }
+
     }
 
 
