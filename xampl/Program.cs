@@ -83,6 +83,7 @@ try
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=About}/{action=Index}/{id?}");
+    app.MapGet("/health", () => Results.Ok("Healthy"));
 
     app.Run();
 }
