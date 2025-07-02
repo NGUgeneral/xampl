@@ -16,7 +16,6 @@ var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentCla
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
     ConfigUtils.LoadAndReplaceEnvironmentVariables(builder.Configuration);
 
     // NLog: Setup NLog for Dependency injection
@@ -30,9 +29,8 @@ try
         });
     builder.Services.AddSingleton<EmailSender>();
     builder.Services.AddAutoMapper(typeof(Program));
-    // Add services to the container.
     builder.Services.AddControllersWithViews();
-    // Add dbContext
+    builder.Services.AddHttpClient();
     builder.Services.AddDbContextPool<DocumentsContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("supabase"), options =>
         {
@@ -40,7 +38,6 @@ try
         })
     );
     builder.Services.AddScoped<IRepository<DocumentsContext>, Repository<DocumentsContext>>();
-
     builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -64,11 +61,9 @@ try
 
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/About/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 

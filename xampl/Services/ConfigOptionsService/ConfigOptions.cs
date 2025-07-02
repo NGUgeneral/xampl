@@ -6,6 +6,7 @@ namespace xampl.Services.ConfigOptionsService
         public const string ConfigVariablesSectionKey = "Variables";
         public const string ConfigSmtpSettingsSectionKey = "SmtpSettings";
         public string Domain { get; set; }
+        public string GoogleGeminiApiKey { get; set; }
         public SmtpSettings SmtpSettings { get; set; } = new SmtpSettings();
     }
 
