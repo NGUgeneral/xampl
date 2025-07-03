@@ -8,6 +8,7 @@ using NLog.Web;
 using xampl.Models.Documents;
 using xampl.Services.ConfigOptionsService;
 using xampl.Services.EmailSenderService;
+using xampl.Services.GeminiService;
 using xampl.Services.RepositoryService;
 using xampl.Utils;
 
@@ -28,6 +29,7 @@ try
             builder.Configuration.GetSection(ConfigOptions.ConfigSmtpSettingsSectionKey).Bind(options.SmtpSettings);
         });
     builder.Services.AddSingleton<EmailSender>();
+    builder.Services.AddSingleton<GeminiService>();
     builder.Services.AddAutoMapper(typeof(Program));
     builder.Services.AddControllersWithViews();
     builder.Services.AddHttpClient();
