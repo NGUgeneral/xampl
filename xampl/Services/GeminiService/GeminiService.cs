@@ -82,10 +82,6 @@ namespace xampl.Services.GeminiService
 
         public async Task<(string Quote, string Author)> GetInspirationQuoteAsync(string promptText)
         {
-            //var promptText = "Provide a short, inspirational quote from a historical figure or famous author. " +
-            //    "The quote should be no more than 20 words. Provide only the quote and the author, nothing else. " +
-            //    "Format it as: \"Quote text\" - Author name";
-
             try
             {
                 var geminiResponse = await PerformGeminiRequest(promptText);
@@ -98,7 +94,7 @@ namespace xampl.Services.GeminiService
                     string quote = quoteText;
                     string author = "Unknown";
 
-                    var parts = quoteText.Split(new[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
+                    var parts = quoteText.Split([" - "], StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         quote = parts[0].Trim().Replace("\"", "");
