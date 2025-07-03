@@ -7,28 +7,16 @@ namespace xampl.Services.GeminiService
     public class GeminiService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiUrl;
-        private readonly ConfigOptions _config;
         private readonly ILogger<GeminiService> _logger;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public GeminiService(
             IHttpClientFactory httpClientFactory,
-            IOptions<ConfigOptions> configOptions,
             ILogger<GeminiService> logger
         )
         {
             _logger = logger;
-            _config = configOptions.Value;
-            var googleGeminiApiKey = _config.GoogleGeminiApiKey;
-            if (string.IsNullOrEmpty(googleGeminiApiKey))
-            {
-                throw new InvalidOperationException("Gemini API Key is not configured in ConfigOptions.");
-            }
-
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.DefaultRequestHeaders.Add("X-goog-api-key", googleGeminiApiKey);
-            _apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
             _jsonSerializerOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -37,7 +25,11 @@ namespace xampl.Services.GeminiService
             };
         }
 
-        private async Task<GeminiApiResponse?> PerformGeminiRequest(string promptText)
+        private async Task<GeminiApiResponse?> PerformGeminiRequest(
+            string apiKey,
+            string apiUrl,
+            string prompt
+        )
         {
             GeminiApiResponse? geminiResponse = null;
             try
@@ -50,15 +42,18 @@ namespace xampl.Services.GeminiService
                         {
                             parts = new[]
                             {
-                                new { text = promptText }
+                                new { text = prompt }
                             }
                         }
                     }
                 };
 
+                var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
+                request.Headers.Add("X-goog-api-key", apiKey);
                 var jsonBody = JsonSerializer.Serialize(requestBody);
                 var content = new StringContent(jsonBody, System.Text.Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(_apiUrl, content);
+                request.Content = content;
+                var response = await _httpClient.SendAsync(request);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -80,11 +75,15 @@ namespace xampl.Services.GeminiService
             return geminiResponse;
         }
 
-        public async Task<(string Quote, string Author)> GetInspirationQuoteAsync(string promptText)
+        public async Task<(string Quote, string Author)> GetInspirationQuoteAsync(
+            string apiKey,
+            string apiUrl,
+            string prompt
+        )
         {
             try
             {
-                var geminiResponse = await PerformGeminiRequest(promptText);
+                var geminiResponse = await PerformGeminiRequest(apiKey, apiUrl, prompt);
                 var quoteText = geminiResponse?.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
 
                 if (!string.IsNullOrEmpty(quoteText))
