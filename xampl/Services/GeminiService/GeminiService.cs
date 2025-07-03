@@ -25,7 +25,7 @@ namespace xampl.Services.GeminiService
             };
         }
 
-        private async Task<GeminiApiResponse?> PerformGeminiRequest(
+        public async Task<GeminiApiResponse?> PerformGeminiRequest(
             string apiKey,
             string apiUrl,
             string prompt
@@ -73,50 +73,6 @@ namespace xampl.Services.GeminiService
             }
 
             return geminiResponse;
-        }
-
-        public async Task<(string Quote, string Author)> GetInspirationQuoteAsync(
-            string apiKey,
-            string apiUrl,
-            string prompt
-        )
-        {
-            try
-            {
-                var geminiResponse = await PerformGeminiRequest(apiKey, apiUrl, prompt);
-                var quoteText = geminiResponse?.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
-
-                if (!string.IsNullOrEmpty(quoteText))
-                {
-                    quoteText = quoteText.Trim().Replace(" ", " ");
-
-                    string quote = quoteText;
-                    string author = "Unknown";
-
-                    var parts = quoteText.Split([" - "], StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 2)
-                    {
-                        quote = parts[0].Trim().Replace("\"", "");
-                        author = parts[1].Trim();
-                    }
-                    else if (parts.Length == 1)
-                    {
-                        quote = parts[0].Trim().Replace("\"", "");
-                    }
-
-                    return (quote, author);
-                }
-                else
-                {
-                    _logger.LogError("Gemini response was valid JSON but no quote text extracted.");
-                    throw new InvalidOperationException("Could not extract quote from Gemini response.");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("An unexpected error occurred: {ex_message}", ex.Message);
-                throw;
-            }
         }
     }
 }
