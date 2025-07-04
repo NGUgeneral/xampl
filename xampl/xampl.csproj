@@ -21,6 +21,12 @@
     <None Include="..\README.md" Link="README.md" />
     <None Include="Models\Documents\efpt.config.json.user" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="Services\EmailSenderService\Templates\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
