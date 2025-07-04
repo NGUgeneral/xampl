@@ -1,4 +1,5 @@
 using dotenv.net;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Web;
 using xampl.Models.Documents;
+using xampl.Services.ClaimsTransformer;
 using xampl.Services.ConfigOptionsService;
 using xampl.Services.EmailSenderService;
 using xampl.Services.GeminiService;
@@ -59,6 +61,7 @@ try
         });
 
     builder.Services.AddAuthorization();
+    builder.Services.AddScoped<IClaimsTransformation, ExternalUserClaimsTransformer>();
 
     var app = builder.Build();
 

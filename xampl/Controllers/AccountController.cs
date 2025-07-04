@@ -35,9 +35,8 @@ namespace xampl.Controllers
                 return View(nameof(CreatePassword), loginVM);
             }
             var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
-            //var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
             var user = await _documentsRepository.GetAllAsQueryable<User>()
-                                       .Include(u => u.UserRoles) // Include roles if using navigation property
+                                       .Include(u => u.UserRoles)
                                        .ThenInclude(ur => ur.Role)
                                        .FirstOrDefaultAsync(x => x.Email == loginVM.Email);
             if (user is null)
