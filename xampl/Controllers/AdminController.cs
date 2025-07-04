@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using xampl.Services.ConfigOptionsService;
 using xampl.Services.GeminiService;
 
 namespace xampl.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class AdminController(
         IOptions<ConfigOptions> configOptions,
         GeminiService geminiService,

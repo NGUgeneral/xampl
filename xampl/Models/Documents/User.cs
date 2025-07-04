@@ -27,4 +27,6 @@ public partial class User
     public virtual ICollection<Document> DocumentCreatedByNavigations { get; set; } = new List<Document>();
 
     public virtual ICollection<Document> DocumentLastUpdatedByNavigations { get; set; } = new List<Document>();
+
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

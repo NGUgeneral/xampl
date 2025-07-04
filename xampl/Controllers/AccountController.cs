@@ -35,7 +35,11 @@ namespace xampl.Controllers
                 return View(nameof(CreatePassword), loginVM);
             }
             var passwordHash = AccountUtils.ConvertToMD5(loginVM.Password);
-            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
+            //var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == loginVM.Email);
+            var user = await _documentsRepository.GetAllAsQueryable<User>()
+                                       .Include(u => u.UserRoles) // Include roles if using navigation property
+                                       .ThenInclude(ur => ur.Role)
+                                       .FirstOrDefaultAsync(x => x.Email == loginVM.Email);
             if (user is null)
             {
                 ToastUtils.SetData(TempData, "No user registered with specified email", true);
@@ -53,6 +57,12 @@ namespace xampl.Controllers
                     new(ClaimTypes.NameIdentifier, $"{user.Id} - {user.FirstName} {user.LastName}"),
                     new(ClaimTypes.AuthenticationMethod, "Manual")
                 };
+                foreach (var userRole in user.UserRoles)
+                {
+                    claims.Add(
+                        new (ClaimTypes.Role, userRole.Role.Title)
+                    );
+                }
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
 
