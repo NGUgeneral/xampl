@@ -2,12 +2,6 @@
     ViewData["Title"] = "REPL";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Repl</h1>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_Toast");
-    }
-}
+<div id="terminal-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/@@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+<script src="~/js/repl.js"></script>

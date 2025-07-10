@@ -1,0 +1,34 @@
+﻿#terminal-container {
+    width: 90%; /* Use a percentage for responsiveness, adjust as needed */
+    height: 75%; /* Fixed height for consistency, adjust as needed */
+    margin: 20px auto; /* Centers the terminal horizontally with top/bottom margin */
+    border: 1px solid rgb(128, 128, 128); /* A subtle green border, common for terminals */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* A glow effect */
+    overflow: hidden; /* Ensures Xterm.js handles its own scrolling */
+    background-color: #1a1a1a; /* Dark background for the terminal itself */
+    border-radius: 5px; /* Slightly rounded corners */
+    position: relative; /* Needed for any absolute positioning of elements inside */
+}
+
+/* Styles specifically applied to the Xterm.js element within the container */
+#terminal-container .terminal {
+    /* Xterm.js automatically creates a div with class 'terminal' inside your container */
+    background-color: #1a1a1a; /* Ensure the terminal background is dark */
+    color: #00FF00; /* Bright green text, classic terminal feel */
+    font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'monospace'; /* Monospaced font */
+    font-size: 14px; /* Adjust font size */
+    padding: 15px; /* Padding inside the terminal for text */
+    box-sizing: border-box; /* Include padding in dimensions */
+    height: 100%; /* Make the terminal fill its container */
+    width: 100%; /* Make the terminal fill its container */
+}
+
+/* Styling for the terminal cursor */
+#terminal-container .terminal-cursor {
+    background-color: #00FF00; /* Green cursor */
+}
+
+/* Optional: Style for selection */
+#terminal-container .terminal-selection {
+    background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent green selection */
+}
