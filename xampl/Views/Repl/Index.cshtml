@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "REPL";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Repl</h1>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_Toast");
+    }
+}
