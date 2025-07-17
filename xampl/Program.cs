@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Web;
+using xampl.Hubs;
 using xampl.Models.Documents;
 using xampl.Services.ClaimsTransformer;
 using xampl.Services.ConfigOptionsService;
@@ -34,6 +35,7 @@ try
     builder.Services.AddSingleton<GeminiService>();
     builder.Services.AddAutoMapper(typeof(Program));
     builder.Services.AddControllersWithViews();
+    builder.Services.AddSignalR();
     builder.Services.AddHttpClient();
     builder.Services.AddDbContextPool<DocumentsContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("supabase"), options =>
@@ -78,6 +80,8 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
+
+    app.MapHub<ConsoleHub>("/consoleHub");
 
     app.MapControllerRoute(
         name: "default",
