@@ -49,7 +49,10 @@ namespace xampl.Controllers
         {
             if (id == null) return NotFound();
 
-            var user = await _documentsRepository.GetAllAsQueryable<User>()
+            var user = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user == null) return NotFound();
 
