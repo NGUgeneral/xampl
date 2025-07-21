@@ -1,9 +1,7 @@
-using dotenv.net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Web;
 using xampl.Hubs;
@@ -22,7 +20,6 @@ try
     var builder = WebApplication.CreateBuilder(args);
     ConfigUtils.LoadAndReplaceEnvironmentVariables(builder.Configuration);
 
-    // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
     ConfigUtils.Initialize(builder.Configuration);
