@@ -1,47 +1,44 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
+using System;
 
 namespace xampl.Hubs
 {
-    public class ConsoleHub : Hub
+    public class ConsoleHub(
+        ILogger<ConsoleHub> logger
+    ) : Hub
     {
-        // This method will be called by the client (your browser's JavaScript)
-        // The 'command' parameter will contain the text typed by the user in Xterm.js
+        private readonly ILogger<ConsoleHub> _logger = logger;
+
         public async Task SendCommand(string command)
         {
-            //TODO: implement command parsing logic, i.g. mapping commands and generic response for unavailable commands;
-
-            // For now, we'll just echo the command and respond with "Hello World!"
-            // In later steps, this is where you'd execute the .NET Console App command.
-
-            Console.WriteLine($"Received command from client ({Context.ConnectionId}): {command}"); // Log on server side
-
-            if (command.Trim().ToLower() == "run-c --help")
-            {
-                // Send a specific response back to the client that sent the command
-                await Clients.Caller.SendAsync("ReceiveOutput", "Hello World!");
-            }
-            else
-            {
-                // Send a generic response back to the client
-                await Clients.Caller.SendAsync("ReceiveOutput", $"Server received: {command}");
-            }
-
-            // You could also send to all clients:
-            // await Clients.All.SendAsync("ReceiveOutput", $"A client typed: {command}");
+            await Clients.Caller.SendAsync("ReceiveOutput", GetCommandResponse(command));
         }
 
-        // You can override OnConnectedAsync and OnDisconnectedAsync for connection events
+        private static string GetCommandResponse(string command)
+        {
+            //TODO: implement command parsing logic,
+            //i.g. mapping commands and generic response for unavailable commands;
+            return command.Trim().ToLower() switch
+            {
+                "--help" =>
+                    "test               - test connection to server",
+                "test" => 
+                    "This message was generated on the server. SignalR communicating correctly.",
+                _ =>
+                    $"Command unknown: {command}",
+            };
+        }
+
         public override async Task OnConnectedAsync()
         {
-            Console.WriteLine($"Client connected: {Context.ConnectionId}");
+            _logger.LogInformation("Client connected: {connectionId}", Context.ConnectionId);
             await Clients.Caller.SendAsync("ReceiveOutput", "Connected to the server. Type a command!");
             await base.OnConnectedAsync();
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            Console.WriteLine($"Client disconnected: {Context.ConnectionId} (Reason: {exception?.Message})");
+            _logger.LogError("Client disconnected: {connectionId} (Reason: {exMessage})", Context.ConnectionId, exception?.Message);
             await base.OnDisconnectedAsync(exception);
         }
     }

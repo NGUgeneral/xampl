@@ -69,7 +69,7 @@ namespace xampl.Services.GeminiService
             }
             catch (Exception ex)
             {
-                _logger.LogError("An unexpected error occurred: {ex_message}", ex.Message);
+                _logger.LogError("An unexpected error occurred: {exMessage}", ex.Message);
             }
 
             return geminiResponse;
