@@ -21,10 +21,27 @@ namespace xampl.Controllers
         private readonly ILogger<UsersController> _logger = logger;
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 20)
         {
+            //TODO: introduce Search;
             ToastUtils.BindData(ViewBag, TempData);
-            return View(await _documentsRepository.GetAllAsQueryable<User>().ToListAsync());
+            var totalCount = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .CountAsync();
+            var userVMs = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .OrderBy(x => x.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => _mapper.Map<UserVM>(x))
+                .ToListAsync();
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            return View(userVMs);
         }
 
         // GET: Users/Details/5
@@ -105,6 +122,7 @@ namespace xampl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            //TODO: delete roles as well, in a single transaction;
             var user = await _documentsRepository.GetAllAsQueryable<User>()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user is not null)
