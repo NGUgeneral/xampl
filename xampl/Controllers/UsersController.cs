@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using xampl.Models.Documents;
@@ -8,6 +9,7 @@ using xampl.ViewModels;
 
 namespace xampl.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController(
         IRepository<DocumentsContext> documentsRepository,
         IMapper mapper,
