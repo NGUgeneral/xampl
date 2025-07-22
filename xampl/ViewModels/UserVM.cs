@@ -1,4 +1,6 @@
-﻿namespace xampl.ViewModels
+﻿using xampl.Models.Documents;
+
+namespace xampl.ViewModels
 {
     public class UserVM
     {
@@ -13,6 +15,8 @@
         public string LastName { get; set; } = string.Empty;
 
         public string Source { get; set; } = string.Empty;
+
+        public ICollection<UserRole> UserRoles {  get; set; } = [];
 
         public List<DocumentVM> Documents { get; set; } = [];
     }

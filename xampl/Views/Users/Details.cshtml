@@ -40,6 +40,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Source)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserRoles)
+        </dt>
+        <dd class="col-sm-10">
+            @string.Join(", ", Model.UserRoles.Select(x => x.Role.Title))
+        </dd>
     </dl>
 </div>
 <div>

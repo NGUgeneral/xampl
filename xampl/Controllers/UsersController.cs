@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using xampl.Models.Documents;
 using xampl.Services.RepositoryService;
@@ -8,6 +10,7 @@ using xampl.ViewModels;
 
 namespace xampl.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController(
         IRepository<DocumentsContext> documentsRepository,
         IMapper mapper,
@@ -18,28 +21,46 @@ namespace xampl.Controllers
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<UsersController> _logger = logger;
 
-        // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 20)
         {
+            //TODO: introduce Search;
             ToastUtils.BindData(ViewBag, TempData);
-            return View(await _documentsRepository.GetAllAsQueryable<User>().ToListAsync());
+            var totalCount = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .CountAsync();
+            var userVMs = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .OrderBy(x => x.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => _mapper.Map<UserVM>(x))
+                .ToListAsync();
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            return View(userVMs);
         }
 
-        // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
-            var user = await _documentsRepository.GetAllAsQueryable<User>()
+            var user = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user == null) return NotFound();
 
             return View(_mapper.Map<UserVM>(user));
         }
 
-        // GET: Users/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await AttachAvailableRolesToViewData();
             return View();
         }
 
@@ -52,27 +73,28 @@ namespace xampl.Controllers
                 await _documentsRepository.CreateAsync(_mapper.Map<User>(userVM));
                 return RedirectToAction(nameof(Index));
             }
+            await AttachAvailableRolesToViewData();
             return View(userVM);
         }
 
-        // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
 
-            var user = await _documentsRepository.GetAllAsQueryable<User>()
+            var user = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user == null) return NotFound();
-            
+
+            await AttachAvailableRolesToViewData();
             return View(_mapper.Map<UserVM>(user));
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UserVM userVM)
+        public async Task<IActionResult> Edit(int id, UserVM userVM, [FromForm] List<int> SelectedRoleIds)
         {
             if (id != userVM.Id) return NotFound();
 
@@ -80,7 +102,22 @@ namespace xampl.Controllers
             {
                 try
                 {
-                    await _documentsRepository.UpdateAsync(_mapper.Map<User>(userVM));
+                    var userToUpdate = await _documentsRepository
+                        .GetAllAsQueryable<User>()
+                        .Include(u => u.UserRoles)
+                        .FirstOrDefaultAsync(u => u.Id == id);
+                    if (userToUpdate is null) return NotFound();
+
+                    userVM.UserRoles = [..
+                        SelectedRoleIds
+                        .Distinct()
+                        .Select(roleId => new UserRole
+                        {
+                            UserId = userVM.Id,
+                            RoleId = roleId
+                        })
+                    ];
+                    await _documentsRepository.UpdateUserWithRoles(_mapper.Map<User>(userVM));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -95,10 +132,10 @@ namespace xampl.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            await AttachAvailableRolesToViewData();
             return View(userVM);
         }
 
-        // POST: Users/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -107,6 +144,8 @@ namespace xampl.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user is not null)
             {
+                var userRoles = _documentsRepository.GetAllAsQueryable<UserRole>().Where(x => x.UserId == id);
+                await _documentsRepository.DeleteManyAsync(userRoles);
                 await _documentsRepository.DeleteAsync(user);
             }
 
@@ -117,6 +156,16 @@ namespace xampl.Controllers
         {
             return await _documentsRepository.GetAllAsQueryable<User>()
                 .AnyAsync(x => x.Id == id);
+        }
+
+        private async Task AttachAvailableRolesToViewData()
+        {
+            var availableRoles = await _documentsRepository.GetAllAsQueryable<Role>().ToListAsync() ?? new List<Role>();
+            ViewData["AvailableRoles"] = availableRoles.Select(r => new SelectListItem
+            {
+                Value = r.Id.ToString(),
+                Text = r.Title
+            }).ToList();
         }
     }
 }

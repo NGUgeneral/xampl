@@ -9,6 +9,7 @@
         Task CreateManyAsync<T>(IEnumerable<T> entites) where T : class;
         Task UpdateAsync<T>(T entity) where T : class;
         Task DeleteAsync<T>(T entity) where T : class;
+        Task DeleteManyAsync<T>(IEnumerable<T> entites) where T : class;
         IQueryable<T> GetAllAsQueryable<T>() where T : class;
         void Save();
     }
