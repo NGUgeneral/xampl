@@ -16,6 +16,8 @@ namespace xampl.ViewModels
 
         public string Source { get; set; } = string.Empty;
 
+        public string PasswordHash { get; set; } = string.Empty;
+
         public ICollection<UserRole> UserRoles {  get; set; } = [];
 
         public List<DocumentVM> Documents { get; set; } = [];
