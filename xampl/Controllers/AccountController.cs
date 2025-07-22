@@ -66,6 +66,7 @@ namespace xampl.Controllers
                 var principal = new ClaimsPrincipal(identity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                ToastUtils.SetData(TempData, $"Welcome {user.FirstName}");
                 return RedirectToAction("Index", "About");
             }
 

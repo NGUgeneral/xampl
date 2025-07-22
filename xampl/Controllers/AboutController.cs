@@ -18,10 +18,6 @@ namespace xampl.Controllers
 
         public IActionResult Index()
         {
-            if (User?.Identity?.IsAuthenticated ?? false)
-            {
-                ToastUtils.SetData(TempData, $"Welcome {User.FindFirstValue(ClaimTypes.GivenName)}");
-            }
             ToastUtils.BindData(ViewBag, TempData);
             return View();
         }
