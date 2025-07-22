@@ -24,6 +24,8 @@
                 <div id="DocumentNotesContainer">
                     @for (int i = 0; i < Model.DocumentNotes.Count; i++)
                     {
+                        <input type="hidden" asp-for="DocumentNotes[i].Id">
+                        <input type="hidden" asp-for="DocumentNotes[i].DocumentId">
                         <textarea asp-for="DocumentNotes[i].Text" class="form-control noteText"></textarea>
                         <div style="text-align: right; width: 100%;">
                             @* TODO: Make this work (pass object to handler in shared DocumentScript) *@
