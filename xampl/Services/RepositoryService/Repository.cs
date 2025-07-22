@@ -32,6 +32,15 @@ namespace xampl.Services.RepositoryService
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteManyAsync<T>(IEnumerable<T> entites) where T : class
+        {
+            foreach (T entity in entites)
+            {
+                dbContext.Set<T>().Remove(entity);
+            }
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task<List<T>> FindAll<T>() where T : class
         {
             return await dbContext.Set<T>().ToListAsync();
