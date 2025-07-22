@@ -2,5 +2,18 @@
     ViewData["Title"] = "REPL";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/repl.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@xterm/xterm@5.5.0/css/xterm.min.css" />
+}
+
 <div id="terminal-container"></div>
 <script src="~/js/repl.js"></script>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/@@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_Toast");
+    }
+}
