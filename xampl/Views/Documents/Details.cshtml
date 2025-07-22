@@ -28,25 +28,6 @@
                 @note.Text
             </dd>
         }
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DocumentLists)
-        </dt>
-        <dd class="col-sm-10"></dd>
-        @foreach (var list in Model.DocumentLists)
-        {
-            @foreach (var listItem in list.DocumentListItems)
-            {
-                <dt class="col-sm-2"></dt>
-                <dd class="col-sm-10">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="@listItem.Checked" checked="@listItem.Checked" disabled>
-                        @listItem.Text
-                    </div>
-                     
-                </dd>
-            }
-        }
     </dl>
 </div>
 <div>

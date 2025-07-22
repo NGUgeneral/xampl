@@ -15,10 +15,6 @@ public partial class DocumentsContext : DbContext
 
     public virtual DbSet<Document> Documents { get; set; }
 
-    public virtual DbSet<DocumentList> DocumentLists { get; set; }
-
-    public virtual DbSet<DocumentListItem> DocumentListItems { get; set; }
-
     public virtual DbSet<DocumentNote> DocumentNotes { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -73,58 +69,6 @@ public partial class DocumentsContext : DbContext
                 .HasForeignKey(d => d.LastUpdatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Document_last_updated_by_fkey");
-        });
-
-        modelBuilder.Entity<DocumentList>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("DocumentList_pkey");
-
-            entity.ToTable("DocumentList");
-
-            entity.HasIndex(e => e.DocumentId, "DocumentList_document_id_idx");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("now()")
-                .HasColumnName("created_at");
-            entity.Property(e => e.DocumentId).HasColumnName("document_id");
-            entity.Property(e => e.Position)
-                .HasDefaultValueSql("'0'::smallint")
-                .HasColumnName("position");
-
-            entity.HasOne(d => d.Document).WithMany(p => p.DocumentLists)
-                .HasForeignKey(d => d.DocumentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DocumentList_document_id_fkey");
-        });
-
-        modelBuilder.Entity<DocumentListItem>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("ListItem_pkey");
-
-            entity.ToTable("DocumentListItem");
-
-            entity.HasIndex(e => e.DocumentListId, "DocumentListItem_document_list_id_idx");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Checked)
-                .HasDefaultValue(false)
-                .HasColumnName("checked");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("now()")
-                .HasColumnName("created_at");
-            entity.Property(e => e.DocumentListId).HasColumnName("document_list_id");
-            entity.Property(e => e.Position)
-                .HasDefaultValueSql("'0'::smallint")
-                .HasColumnName("position");
-            entity.Property(e => e.Text)
-                .IsRequired()
-                .HasColumnName("text");
-
-            entity.HasOne(d => d.DocumentList).WithMany(p => p.DocumentListItems)
-                .HasForeignKey(d => d.DocumentListId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DocumentListItem_document_list_id_fkey");
         });
 
         modelBuilder.Entity<DocumentNote>(entity =>
@@ -196,6 +140,8 @@ public partial class DocumentsContext : DbContext
         modelBuilder.Entity<UserRole>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("UserRoles_pkey");
+
+            entity.HasIndex(e => e.UserId, "UserRoles_user_id_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.RoleId).HasColumnName("role_id");

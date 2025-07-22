@@ -21,8 +21,6 @@ public partial class Document
 
     public virtual User CreatedByNavigation { get; set; }
 
-    public virtual ICollection<DocumentList> DocumentLists { get; set; } = new List<DocumentList>();
-
     public virtual ICollection<DocumentNote> DocumentNotes { get; set; } = new List<DocumentNote>();
 
     public virtual User LastUpdatedByNavigation { get; set; }

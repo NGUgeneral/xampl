@@ -15,8 +15,6 @@ namespace xampl.Services.RepositoryService
             return await dbContext.Set<Document>()
                 .Where(d => d.Id == documentId)
                 .Include(d => d.DocumentNotes)
-                .Include(d => d.DocumentLists)
-                .ThenInclude(dl => dl.DocumentListItems)
                 .FirstOrDefaultAsync();
         }
 
