@@ -19,9 +19,9 @@ public partial class Document
 
     public int LastUpdatedBy { get; set; }
 
-    public virtual User CreatedByNavigation { get; set; }
+    public string Content { get; set; }
 
-    public virtual ICollection<DocumentNote> DocumentNotes { get; set; } = new List<DocumentNote>();
+    public virtual User CreatedByNavigation { get; set; }
 
     public virtual User LastUpdatedByNavigation { get; set; }
 }

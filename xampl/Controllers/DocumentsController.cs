@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using xampl.Models.Documents;
@@ -22,8 +24,9 @@ namespace xampl.Controllers
         public async Task<IActionResult> Index()
         {
             ToastUtils.BindData(ViewBag, TempData);
-            var documentVMs = await _documentsRepository.GetAllAsQueryable<Document>()
-                .Select(d => _mapper.Map<DocumentVM>(d))
+            var documentVMs = await _documentsRepository
+                .GetAllAsQueryable<Document>()
+                .Select(x => _mapper.Map<DocumentVM>(x))
                 .ToListAsync();
             return View(documentVMs);
         }
@@ -31,36 +34,32 @@ namespace xampl.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
-            var document = await _documentsRepository.GetDocumentById((int)id);
+            var document = await _documentsRepository
+                .GetAllAsQueryable<Document>()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (document == null) return NotFound();
 
             var documentVM = _mapper.Map<DocumentVM>(document);
-
             return View(documentVM);
         }
 
+        [Authorize]
         public IActionResult Create()
         {
             var documentVM = new DocumentVM();
-            //documentVM.CreatedBy = Request.User.GetUserId();
             return View(documentVM);
         }
 
         [HttpPost]
-        public IActionResult AddNote(DocumentVM documentVM)
-        {
-            documentVM.DocumentNotes.Add(new DocumentNoteVM());
-            return View(nameof(Create), documentVM);
-        }
-
-        [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DocumentVM documentVM)
         {
             //TODO: wrap it all in try block and move into utils;
-            if (!User.Identity?.IsAuthenticated ?? true) return Unauthorized();
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == userEmail);
+            var user = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .FirstOrDefaultAsync(x => x.Email == userEmail);
             if (user is null)
             {
                 user = new User
@@ -76,13 +75,10 @@ namespace xampl.Controllers
 
             if (ModelState.IsValid)
             {
-                foreach (var note in documentVM.DocumentNotes)
-                {
-                    //TODO: move this to utils;
-                    note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
-                }
                 documentVM.CreatedBy = user.Id;
                 documentVM.LastUpdatedBy = user.Id;
+                documentVM.CreatedAt = DateTime.UtcNow;
+                documentVM.LastUpdatedAt = DateTime.UtcNow;
                 var document = _mapper.Map<Document>(documentVM);
                 await _documentsRepository.CreateAsync(document);
                 return RedirectToAction(nameof(Index));
@@ -91,23 +87,29 @@ namespace xampl.Controllers
             return View(documentVM);
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-            var document = await _documentsRepository.GetDocumentById((int)id);
+            var document = await _documentsRepository
+                .GetAllAsQueryable<Document>()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (document == null) return NotFound();
             var documentVM = _mapper.Map<DocumentVM>(document);
             return View(documentVM);
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, DocumentVM documentVM)
         {
             //TODO: wrap it all in try block and move into utils;
-            if (!User.Identity?.IsAuthenticated ?? true) return Unauthorized();
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            var user = await _documentsRepository.GetAllAsQueryable<User>().FirstOrDefaultAsync(x => x.Email == userEmail);
+            var user = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .FirstOrDefaultAsync(x => x.Email == userEmail);
+            //TODO: this is repeated in several places. Generalize;
             if (user is null)
             {
                 user = new User
@@ -125,23 +127,16 @@ namespace xampl.Controllers
 
             if (ModelState.IsValid)
             {
-                foreach (var note in documentVM.DocumentNotes)
-                {
-                    //TODO: move this to utils;
-                    note.Position = (short)documentVM.DocumentNotes.IndexOf(note);
-                }
                 documentVM.LastUpdatedBy = user.Id;
+                documentVM.LastUpdatedAt = DateTime.UtcNow;
                 var document = _mapper.Map<Document>(documentVM);
                 try
                 {
                     await _documentsRepository.UpdateAsync(document);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!await DocumentExists(document.Id))
-                    {
-                        return NotFound();
-                    }
+                    _logger.LogError("{exMessage}", ex.Message);
                     throw;
                 }
                 return RedirectToAction(nameof(Index));
@@ -149,13 +144,25 @@ namespace xampl.Controllers
             return View(documentVM);
         }
 
-        // POST: Documents/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (User.Identity is null) return Unauthorized();
-            var document = await _documentsRepository.GetAllAsQueryable<Document>()
+            if (id == null) return NotFound();
+            var document = await _documentsRepository
+                .GetAllAsQueryable<Document>()
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (document == null) return NotFound();
+            var documentVM = _mapper.Map<DocumentVM>(document);
+            return View(documentVM);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var document = await _documentsRepository
+                .GetAllAsQueryable<Document>()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (document is not null)
             {
@@ -163,12 +170,6 @@ namespace xampl.Controllers
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<bool> DocumentExists(int id)
-        {
-            return await _documentsRepository.GetAllAsQueryable<Document>()
-                .AnyAsync(x => x.Id == id);
         }
     }
 }

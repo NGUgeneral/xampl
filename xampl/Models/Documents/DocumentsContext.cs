@@ -15,8 +15,6 @@ public partial class DocumentsContext : DbContext
 
     public virtual DbSet<Document> Documents { get; set; }
 
-    public virtual DbSet<DocumentNote> DocumentNotes { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -48,6 +46,9 @@ public partial class DocumentsContext : DbContext
             entity.HasIndex(e => e.CreatedBy, "Document_created_by_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Content)
+                .HasDefaultValueSql("''::text")
+                .HasColumnName("content");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
@@ -69,32 +70,6 @@ public partial class DocumentsContext : DbContext
                 .HasForeignKey(d => d.LastUpdatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Document_last_updated_by_fkey");
-        });
-
-        modelBuilder.Entity<DocumentNote>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("DocumentNote_pkey");
-
-            entity.ToTable("DocumentNote");
-
-            entity.HasIndex(e => e.DocumentId, "DocumentNote_document_id_idx");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("now()")
-                .HasColumnName("created_at");
-            entity.Property(e => e.DocumentId).HasColumnName("document_id");
-            entity.Property(e => e.Position)
-                .HasDefaultValueSql("'0'::smallint")
-                .HasColumnName("position");
-            entity.Property(e => e.Text)
-                .IsRequired()
-                .HasColumnName("text");
-
-            entity.HasOne(d => d.Document).WithMany(p => p.DocumentNotes)
-                .HasForeignKey(d => d.DocumentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DocumentNote_document_id_fkey");
         });
 
         modelBuilder.Entity<Role>(entity =>

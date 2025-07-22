@@ -19,10 +19,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "public.DocumentNote",
-         "ObjectType": 0
-      },
-      {
          "Name": "public.Roles",
          "ObjectType": 0
       },

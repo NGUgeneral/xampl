@@ -1,7 +1,7 @@
 ﻿@model xampl.ViewModels.DocumentVM
 
 @{
-    ViewData["Title"] = "Document Details";
+    ViewData["Title"] = "Details";
 }
 
 <h1>Details</h1>
@@ -11,23 +11,41 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DocumentNotes)
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastUpdatedAt)
         </dt>
-        <dd class="col-sm-10"></dd>
-        @foreach (var note in Model.DocumentNotes)
-        {
-            <dt class="col-sm-2"></dt>
-            <dd class="col-sm-10">
-                @note.Text
-            </dd>
-        }
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastUpdatedAt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastUpdatedBy)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastUpdatedBy)
+        </dd>
     </dl>
 </div>
 <div>

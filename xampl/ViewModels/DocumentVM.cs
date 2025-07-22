@@ -14,6 +14,6 @@
 
         public string Title { get; set; } = string.Empty;
 
-        public List<DocumentNoteVM> DocumentNotes { get; set; } = [];
+        public string Content {  get; set; } = string.Empty;
     }
 }
