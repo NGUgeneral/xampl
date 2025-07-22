@@ -140,11 +140,12 @@ namespace xampl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            //TODO: delete roles as well, in a single transaction;
             var user = await _documentsRepository.GetAllAsQueryable<User>()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user is not null)
             {
+                var userRoles = _documentsRepository.GetAllAsQueryable<UserRole>().Where(x => x.UserId == id);
+                await _documentsRepository.DeleteManyAsync(userRoles);
                 await _documentsRepository.DeleteAsync(user);
             }
 
