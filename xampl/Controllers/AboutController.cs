@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Security.Claims;
 using xampl.Models;
-using xampl.Models.Documents;
 using xampl.Utils;
 
 namespace xampl.Controllers

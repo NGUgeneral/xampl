@@ -22,6 +22,52 @@ body {
 }
 
 .login-dropdown-item:active {
-    background-color: #6c757d !important; /* Grey */
-    color: white !important; /* Adjust text color */
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+.question-mark-icon {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #E91E63;
+    font-size: 1.5rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    outline: none;
+    box-shadow: none;
+}
+
+.question-mark-icon:focus-visible {
+    outline: 2px solid #9C27B0;
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+.question-mark-icon:hover {
+    background-color: rgba(233, 30, 99, 0.1);
+    color: #C2185B;
+}
+
+.question-mark-icon i {
+    color: inherit;
+}
+
+.navbar-nav .nav-item .question-mark-icon {
+    color: #E91E63;
+}
+
+.navbar-nav .nav-item .question-mark-icon:hover {
+    color: #C2185B;
+}
+
+.navbar-nav .nav-item .question-mark-icon {
+    margin-left: 15px;
+    margin-right: 5px;
 }
