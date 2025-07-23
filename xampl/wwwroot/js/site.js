@@ -1,4 +1,12 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
+    $('#pageHintsModal').on('show.bs.modal', function (event) {
+        var modalBody = $('#pageHintsModalBody');
+        var hintsContent = $('#currentPageHints').html();
 
-// Write your JavaScript code.
+        if (hintsContent.trim() === '') {
+            modalBody.html('<p>No specific hints available for this page. Please refer to general help.</p>');
+        } else {
+            modalBody.html(hintsContent);
+        }
+    });
+});
