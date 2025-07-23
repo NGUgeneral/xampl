@@ -25,7 +25,8 @@ namespace xampl.Controllers
         {
             ToastUtils.BindData(ViewBag, TempData);
             var documentsQuery = _documentsRepository
-                .GetAllAsQueryable<Document>();
+                .GetAllAsQueryable<Document>()
+                .Where(x => x.IsPublic);
             var currentUser = await _documentsRepository
                 .GetAllAsQueryable<User>()
                 .FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
@@ -37,6 +38,7 @@ namespace xampl.Controllers
                 documentsQuery = personalDocumentsQuery.Concat(documentsQuery);
             }
             var documentVMs = await documentsQuery
+                .Include(x => x.CreatedByNavigation)
                 .Select(x => _mapper.Map<DocumentVM>(x))
                 .ToListAsync();
             return View(documentVMs);
@@ -47,6 +49,8 @@ namespace xampl.Controllers
             if (id == null) return NotFound();
             var document = await _documentsRepository
                 .GetAllAsQueryable<Document>()
+                .Include(x => x.CreatedByNavigation)
+                .Include(x => x.LastUpdatedByNavigation)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (document == null) return NotFound();
 

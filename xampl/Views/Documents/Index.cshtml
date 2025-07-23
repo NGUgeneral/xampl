@@ -13,13 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastUpdatedAt)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Content)
@@ -28,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.CreatedBy)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastUpdatedBy)
+                @Html.DisplayNameFor(model => model.IsPublic)
             </th>
             <th></th>
         </tr>
@@ -37,22 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastUpdatedAt)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Content)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
+                @Html.DisplayFor(modelItem => item.CreatedByNavigation.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastUpdatedBy)
+                @Html.DisplayFor(modelItem => item.IsPublic)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

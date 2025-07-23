@@ -1,4 +1,7 @@
-﻿namespace xampl.ViewModels
+﻿#nullable disable
+using xampl.Models.Documents;
+
+namespace xampl.ViewModels
 {
     public class DocumentVM
     {
@@ -17,5 +20,9 @@
         public string Content {  get; set; } = string.Empty;
         
         public bool IsPublic { get; set; }
+
+        public virtual User CreatedByNavigation { get; set; }
+
+        public virtual User LastUpdatedByNavigation { get; set; }
     }
 }
