@@ -21,6 +21,8 @@ public partial class Document
 
     public string Content { get; set; }
 
+    public bool IsPublic { get; set; }
+
     public virtual User CreatedByNavigation { get; set; }
 
     public virtual User LastUpdatedByNavigation { get; set; }

@@ -53,6 +53,9 @@ public partial class DocumentsContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.IsPublic)
+                .HasDefaultValue(true)
+                .HasColumnName("is_public");
             entity.Property(e => e.LastUpdatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("last_updated_at");

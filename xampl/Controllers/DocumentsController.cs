@@ -24,8 +24,19 @@ namespace xampl.Controllers
         public async Task<IActionResult> Index()
         {
             ToastUtils.BindData(ViewBag, TempData);
-            var documentVMs = await _documentsRepository
-                .GetAllAsQueryable<Document>()
+            var documentsQuery = _documentsRepository
+                .GetAllAsQueryable<Document>();
+            var currentUser = await _documentsRepository
+                .GetAllAsQueryable<User>()
+                .FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
+            if (currentUser is not null)
+            {
+                var personalDocumentsQuery = _documentsRepository
+                    .GetAllAsQueryable<Document>()
+                    .Where(x => x.CreatedBy == currentUser.Id && !x.IsPublic);
+                documentsQuery = personalDocumentsQuery.Concat(documentsQuery);
+            }
+            var documentVMs = await documentsQuery
                 .Select(x => _mapper.Map<DocumentVM>(x))
                 .ToListAsync();
             return View(documentVMs);
