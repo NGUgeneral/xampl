@@ -4,12 +4,16 @@
     ViewData["Title"] = "Edit";
 }
 
+@section Styles {
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+}
+
 <h1>Edit</h1>
 
 <h4>Document</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -22,8 +26,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <partial name="_Quill"
+                         model="@Html.NameFor(model => model.Content)"
+                         view-data='new ViewDataDictionary(ViewData) { { "InitialContent", Model?.Content }, { "EditorHeight", "300px" } }' />
                 <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check mt-3">
+                <input class="form-check-input" asp-for="IsPublic" />
+                <label class="form-check-label" asp-for="IsPublic"></label>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -36,3 +46,6 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+@section Scripts {
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+}

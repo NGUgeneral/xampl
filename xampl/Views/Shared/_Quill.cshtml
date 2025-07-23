@@ -1,0 +1,62 @@
+﻿@using System.Text.Encodings.Web
+@model string
+
+@{
+    string initialContent = ViewData["InitialContent"] as string;
+    string editorHeight = ViewData["EditorHeight"] as string ?? "300px";
+    string editorPlaceholder = ViewData["EditorPlaceholder"] as string ?? "Enter content...";
+}
+
+<div id="@(Model)" style="height: @(editorHeight);">
+    @Html.Raw(initialContent)
+</div>
+<input type="hidden" id="hidden-@(Model)" name="@(Model)" />
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof Quill === 'undefined') {
+            console.error("Quill.js not loaded. Please ensure Quill.js script is referenced in _Layout.cshtml or before this partial.");
+            return;
+        }
+
+        var editorId = '@(Model)';
+        var hiddenInputId = 'hidden-' + editorId;
+        var hiddenInputElement = document.getElementById(hiddenInputId);
+
+        var quill = new Quill('#' + editorId, {
+            theme: 'snow',
+            placeholder: '@Html.Raw(JavaScriptEncoder.Default.Encode(editorPlaceholder))',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'align': [] }],
+                    ['link', 'image'],
+                    ['clean']
+                ]
+            }
+        });
+
+        var editorDiv = document.getElementById(editorId);
+        if (editorDiv.innerHTML.trim() !== '<p><br></p>' && editorDiv.innerHTML.trim() !== '') {
+            quill.clipboard.dangerouslyPasteHTML(editorDiv.innerHTML);
+        } else {
+            quill.setContents([]);
+        }
+
+        $(document).on('submit', 'form', function(event) {
+            var html = quill.root.innerHTML;
+            var isEmpty = html === '<p><br></p>' || html.trim() === '';
+            hiddenInputElement.value = isEmpty ? '' : html;
+        });
+
+        quill.on('text-change', function(delta, oldDelta, source) {
+            if (source === 'user') {
+                var html = quill.root.innerHTML;
+                var isEmpty = html === '<p><br></p>' || html.trim() === '';
+                hiddenInputElement.value = isEmpty ? '' : html;
+            }
+        });
+    });
+</script>
