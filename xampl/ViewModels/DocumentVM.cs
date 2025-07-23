@@ -1,4 +1,5 @@
 ﻿#nullable disable
+using System.ComponentModel.DataAnnotations;
 using xampl.Models.Documents;
 using xampl.Validation;
 
@@ -16,6 +17,7 @@ namespace xampl.ViewModels
 
         public int LastUpdatedBy { get; set; }
 
+        [Required]
         public string Title { get; set; }
 
         [SanitizeHtml(ErrorMessage = "Your content contains unsafe or disallowed HTML and cannot be saved.")]
