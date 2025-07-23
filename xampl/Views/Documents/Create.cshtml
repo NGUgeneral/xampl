@@ -28,6 +28,10 @@
                          view-data='new ViewDataDictionary(ViewData) { { "InitialContent", Model?.Content }, { "EditorHeight", "300px" } }' />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
+            <div class="form-group form-check mt-3">
+                <input class="form-check-input" asp-for="IsPublic" />
+                <label class="form-check-label" asp-for="IsPublic"></label>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
