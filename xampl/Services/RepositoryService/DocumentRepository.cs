@@ -4,22 +4,11 @@ namespace xampl.Services.RepositoryService
 {
     public interface IDocumentRepository
     {
-        public Task<Document?> GetDocumentById(int documentId);
         public Task UpdateUserWithRoles(User user);
     }
 
     public partial class Repository<TDbContext> : IRepository<TDbContext> where TDbContext : DbContext
     {
-        public async Task<Document?> GetDocumentById(int documentId)
-        {
-            return await dbContext.Set<Document>()
-                .Where(d => d.Id == documentId)
-                .Include(d => d.DocumentNotes)
-                .Include(d => d.DocumentLists)
-                .ThenInclude(dl => dl.DocumentListItems)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task UpdateUserWithRoles(User user)
         {
             var existingUser = await dbContext.Set<User>()

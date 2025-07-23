@@ -19,18 +19,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "public.DocumentList",
-         "ObjectType": 0
-      },
-      {
-         "Name": "public.DocumentListItem",
-         "ObjectType": 0
-      },
-      {
-         "Name": "public.DocumentNote",
-         "ObjectType": 0
-      },
-      {
          "Name": "public.Roles",
          "ObjectType": 0
       },

@@ -19,11 +19,11 @@ public partial class Document
 
     public int LastUpdatedBy { get; set; }
 
+    public string Content { get; set; }
+
+    public bool IsPublic { get; set; }
+
     public virtual User CreatedByNavigation { get; set; }
-
-    public virtual ICollection<DocumentList> DocumentLists { get; set; } = new List<DocumentList>();
-
-    public virtual ICollection<DocumentNote> DocumentNotes { get; set; } = new List<DocumentNote>();
 
     public virtual User LastUpdatedByNavigation { get; set; }
 }

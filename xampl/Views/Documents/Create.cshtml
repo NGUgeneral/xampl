@@ -1,7 +1,7 @@
 ﻿@model xampl.ViewModels.DocumentVM
 
 @{
-    ViewData["Title"] = "Documents";
+    ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
@@ -18,35 +18,18 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DocumentNotes" class="control-label"></label>
-                <div id="DocumentNotesContainer">
-                    @for (int i = 0; i < Model.DocumentNotes.Count; i++)
-                    {
-                        <textarea asp-for="DocumentNotes[i].Text" class="form-control noteText"></textarea>
-                        <span asp-validation-for="DocumentNotes[i].Text" class="text-danger"></span>
-                        <br/>
-                    }
-                </div>
-                <div style="text-align: right;">
-                    <button type="button" class="btn btn-sm btn-success" id="addNoteButton">Add Note</button>
-                </div>
+                <label asp-for="Content" class="control-label"></label>
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-<br />
-<div>
-    <a asp-action="Index">Back</a>
-</div>
-<br />
-<br />
-<br />
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    @{await Html.RenderPartialAsync("_DocumentScripts");}
-}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
