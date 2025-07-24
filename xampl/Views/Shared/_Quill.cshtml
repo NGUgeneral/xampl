@@ -22,19 +22,48 @@
         var hiddenInputId = 'hidden-' + editorId;
         var hiddenInputElement = document.getElementById(hiddenInputId);
 
+        function copyHtmlContent() {
+            var htmlContent = quill.root.innerHTML;
+            if (htmlContent.trim() === '<p><br></p>') {
+                htmlContent = '';
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(htmlContent)
+                    .then(function() {
+                        alert('HTML content copied to clipboard!');
+                    })
+                    .catch(function(err) {
+                        console.error('Failed to copy HTML: ', err);
+                        alert('Failed to copy HTML to clipboard. Please try again or copy manually from the editor.');
+                    });
+            } else {
+                prompt("Browser does not support direct clipboard access. Copy this manually:", htmlContent);
+            }
+        }
+
+        var icons = Quill.import('ui/icons');
+        icons['copyHtml'] = '<i class="bi bi-copy"></i>';
+
         var quill = new Quill('#' + editorId, {
             theme: 'snow',
             placeholder: '@Html.Raw(JavaScriptEncoder.Default.Encode(editorPlaceholder))',
             modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'indent': '-1'}, { 'indent': '+1' }],
-                    [{ 'align': [] }],
-                    ['link'],
-                    ['clean']
-                ]
+                toolbar: {
+                    container: [
+                        [{ 'header': [1, 2, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        [{ 'align': [] }],
+                        ['link'],
+                        ['clean'],
+                        [{ 'copyHtml': 'Copy as HTML' }]
+                    ],
+                    handlers: {
+                        'copyHtml': copyHtmlContent
+                    }
+                }
             }
         });
 
