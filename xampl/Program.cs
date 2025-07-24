@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using HotChocolate.AspNetCore;
 using xampl.Hubs;
 using xampl.Models.Xampl;
 using xampl.Services.ClaimsTransformer;
@@ -12,6 +13,7 @@ using xampl.Services.EmailSenderService;
 using xampl.Services.GeminiService;
 using xampl.Services.RepositoryService;
 using xampl.Utils;
+using xampl.GraphQL;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -41,6 +43,13 @@ try
         })
     );
     builder.Services.AddScoped<IRepository<XamplContext>, Repository<XamplContext>>();
+    builder.Services
+        .AddGraphQLServer()
+        .AddQueryType<Query>()
+        .AddMutationType<Mutation>()
+        .AddFiltering()
+        .AddSorting()
+        .AddProjections();
     builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -72,14 +81,11 @@ try
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
-
     app.UseRouting();
-
     app.UseAuthentication();
     app.UseAuthorization();
-
     app.MapHub<ConsoleHub>("/consoleHub");
-
+    app.MapGraphQL();
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=About}/{action=Index}/{id?}");
