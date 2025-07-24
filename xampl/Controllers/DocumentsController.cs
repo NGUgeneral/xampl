@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using xampl.Models.Documents;
+using xampl.Models.Xampl;
 using xampl.Services.RepositoryService;
 using xampl.Utils;
 using xampl.ViewModels;
@@ -12,12 +12,12 @@ using xampl.ViewModels;
 namespace xampl.Controllers
 {
     public class DocumentsController(
-        IRepository<DocumentsContext> documentsRepository,
+        IRepository<XamplContext> documentsRepository,
         IMapper mapper,
         ILogger<DocumentsController> logger
     ) : Controller
     {
-        private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
+        private readonly IRepository<XamplContext> _documentsRepository = documentsRepository;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<DocumentsController> _logger = logger;
 

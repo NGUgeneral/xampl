@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using xampl.Models.Documents;
+using xampl.Models.Xampl;
 using xampl.Services.RepositoryService;
 using xampl.Utils;
 using xampl.ViewModels;
@@ -12,12 +12,12 @@ namespace xampl.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class UsersController(
-        IRepository<DocumentsContext> documentsRepository,
+        IRepository<XamplContext> documentsRepository,
         IMapper mapper,
         ILogger<UsersController> logger
     ) : Controller
     {
-        private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
+        private readonly IRepository<XamplContext> _documentsRepository = documentsRepository;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<UsersController> _logger = logger;
 

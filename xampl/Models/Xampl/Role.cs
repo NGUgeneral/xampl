@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace xampl.Models.Documents;
+namespace xampl.Models.Xampl;
 
 public partial class Role
 {
