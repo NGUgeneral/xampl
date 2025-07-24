@@ -12,6 +12,7 @@ using xampl.Services.EmailSenderService;
 using xampl.Services.GeminiService;
 using xampl.Services.RepositoryService;
 using xampl.Utils;
+using xampl.GraphQL;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -62,6 +63,15 @@ try
     builder.Services.AddAuthorization();
     builder.Services.AddScoped<IClaimsTransformation, ExternalUserClaimsTransformer>();
 
+    builder.Services
+        .AddGraphQLServer()
+        .AddQueryType<Query>()
+        .AddMutationType<Mutation>()
+        .AddFiltering()
+        .AddSorting()
+        .AddProjections()
+        .AddAuthorization();
+
     var app = builder.Build();
 
     if (!app.Environment.IsDevelopment())
@@ -72,14 +82,11 @@ try
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
-
     app.UseRouting();
-
     app.UseAuthentication();
     app.UseAuthorization();
-
     app.MapHub<ConsoleHub>("/consoleHub");
-
+    app.MapGraphQL();
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=About}/{action=Index}/{id?}");

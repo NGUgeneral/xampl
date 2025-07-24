@@ -38,7 +38,7 @@ namespace xampl.Services.EmailSenderService
 
         public async Task<string> LoadEmailTemplateAsync(string templateName, Dictionary<string, string> placeholders)
         {
-            var templatePath = Path.Combine("Services/EmailSenderService/Templates", $"{templateName}.html");
+            var templatePath = System.IO.Path.Combine("Services/EmailSenderService/Templates", $"{templateName}.html");
 
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException("Template not found.");
