@@ -31,6 +31,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="dotenv.net" Version="3.2.1" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.7" />
+    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.7" />
     <PackageReference Include="HtmlSanitizer" Version="9.0.886" />
     <PackageReference Include="MailKit" Version="4.12.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.16" />
