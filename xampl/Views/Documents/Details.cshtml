@@ -52,3 +52,20 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section PageHints {
+    <p>
+        This section contains very straightforward feature, which is CRUD of "Documents".
+        A given Document contains Title, Content and flag if it is a Public Document or a Personal one.
+        Browsing this section and all Public Documents does not require Authorization.
+        However, to perform CRUD operations - one have to sign in. Specific roles are not required.
+        Once Authorized - User will see all their personal Documents.
+        <br>
+        Neat features:
+        <ul>
+            <li>Content is editable as a Rich Text input and stored as HTML</li>
+            <li>Validation includes Content Sanitazing, eliminating very obvious security breach</li>
+            <li>Client can see document activity in real time (utilizing implementation of WebSockets in the app)</li>
+        </ul>
+    </p>
+}
