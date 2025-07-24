@@ -10,6 +10,14 @@
 <div id="terminal-container"></div>
 <script src="~/js/repl.js"></script>
 
+@section PageHints {
+    <p>
+        This strange looking page is actually a web representation of an existing console application.<br>
+        The application itself is an old text based RPG game, which I found in my archives.<br>
+        The console communicates with the server in real time via WebSocket (SignalR).
+    </p>
+}
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/@@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
