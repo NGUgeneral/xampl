@@ -1,4 +1,4 @@
-﻿using xampl.Models.Documents;
+﻿using xampl.Models.Xampl;
 
 namespace xampl.ViewModels
 {

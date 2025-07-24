@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using xampl.Models.Documents;
+using xampl.Models.Xampl;
 using xampl.Services.RepositoryService;
 
 namespace xampl.Services.ClaimsTransformer
 {
     public class ExternalUserClaimsTransformer(
-        IRepository<DocumentsContext> documentsRepository
+        IRepository<XamplContext> documentsRepository
     ) : IClaimsTransformation
     {
-        private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
+        private readonly IRepository<XamplContext> _documentsRepository = documentsRepository;
 
         public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
         {

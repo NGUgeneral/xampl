@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace xampl.Models.Documents;
+namespace xampl.Models.Xampl;
 
-public partial class DocumentsContext : DbContext
+public partial class XamplContext : DbContext
 {
-    public DocumentsContext(DbContextOptions<DocumentsContext> options)
+    public XamplContext(DbContextOptions<XamplContext> options)
         : base(options)
     {
     }
@@ -79,6 +79,8 @@ public partial class DocumentsContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("RolesLookup_pkey");
 
+            entity.ToTable("Role");
+
             entity.HasIndex(e => e.Title, "RolesLookup_title_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
@@ -118,6 +120,8 @@ public partial class DocumentsContext : DbContext
         modelBuilder.Entity<UserRole>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("UserRoles_pkey");
+
+            entity.ToTable("UserRole");
 
             entity.HasIndex(e => e.UserId, "UserRoles_user_id_idx");
 

@@ -1,6 +1,6 @@
 ﻿#nullable disable
 using System.ComponentModel.DataAnnotations;
-using xampl.Models.Documents;
+using xampl.Models.Xampl;
 using xampl.Validation;
 
 namespace xampl.ViewModels

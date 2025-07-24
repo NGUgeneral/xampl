@@ -1,12 +1,12 @@
 ﻿{
    "CodeGenerationMode": 4,
-   "ContextClassName": "DocumentsContext",
+   "ContextClassName": "XamplContext",
    "ContextNamespace": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "Models\/Documents",
+   "OutputPath": "Models\/Xampl",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "xampl",
    "Schemas": null,
@@ -19,7 +19,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "public.Roles",
+         "Name": "public.Role",
          "ObjectType": 0
       },
       {
@@ -27,7 +27,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "public.UserRoles",
+         "Name": "public.UserRole",
          "ObjectType": 0
       }
    ],

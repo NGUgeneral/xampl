@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using xampl.Models.Documents;
+using xampl.Models.Xampl;
 using xampl.ViewModels;
 
 namespace xampl.Services.MapperService

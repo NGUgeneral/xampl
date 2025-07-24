@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 using xampl.Hubs;
-using xampl.Models.Documents;
+using xampl.Models.Xampl;
 using xampl.Services.ClaimsTransformer;
 using xampl.Services.ConfigOptionsService;
 using xampl.Services.EmailSenderService;
@@ -34,13 +34,13 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AddSignalR();
     builder.Services.AddHttpClient();
-    builder.Services.AddDbContextPool<DocumentsContext>(options =>
+    builder.Services.AddDbContextPool<XamplContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("supabase"), options =>
         {
             options.CommandTimeout(180);
         })
     );
-    builder.Services.AddScoped<IRepository<DocumentsContext>, Repository<DocumentsContext>>();
+    builder.Services.AddScoped<IRepository<XamplContext>, Repository<XamplContext>>();
     builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using xampl.Models.Documents;
+using xampl.Models.Xampl;
 using xampl.Models.DTO;
 using xampl.Services.EmailSenderService;
 using xampl.Services.RepositoryService;
@@ -14,11 +14,11 @@ using xampl.ViewModels;
 namespace xampl.Controllers
 {
     public class AccountController(
-        IRepository<DocumentsContext> documentsRepository,
+        IRepository<XamplContext> documentsRepository,
         EmailSender emailSender
     ) : Controller
     {
-        private readonly IRepository<DocumentsContext> _documentsRepository = documentsRepository;
+        private readonly IRepository<XamplContext> _documentsRepository = documentsRepository;
         private readonly EmailSender _emailSender = emailSender;
 
         [HttpPost]
