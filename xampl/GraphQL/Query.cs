@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HotChocolate.Authorization;
+using Microsoft.EntityFrameworkCore;
 using xampl.Models.Xampl;
 using xampl.Services.RepositoryService;
 
 namespace xampl.GraphQL
 {
+    [Authorize]
     public class Query
     {
         [UseProjection]

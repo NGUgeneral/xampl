@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using HotChocolate.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using xampl.Models.Xampl;
@@ -9,6 +9,7 @@ namespace xampl.GraphQL
     public record AddDocumentInput(int UserId, string Title, string Content);
     public record UpdateDocumentInput(int UserId, int DocumentId, string Title, string Content);
 
+    [Authorize]
     public class Mutation
     {
         public async Task<Document?> AddDocument(
@@ -45,6 +46,7 @@ namespace xampl.GraphQL
             throw new ValidationException($"Invalid input\n{string.Join('\n', validationErrors)}");
         }
 
+        [Authorize(Roles = ["Admin"])]
         public async Task<Document> UpdateDocument(
             [Service] IRepository<XamplContext> repo,
             UpdateDocumentInput input

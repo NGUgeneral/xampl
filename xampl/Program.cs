@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
-using HotChocolate.AspNetCore;
 using xampl.Hubs;
 using xampl.Models.Xampl;
 using xampl.Services.ClaimsTransformer;
@@ -43,13 +42,6 @@ try
         })
     );
     builder.Services.AddScoped<IRepository<XamplContext>, Repository<XamplContext>>();
-    builder.Services
-        .AddGraphQLServer()
-        .AddQueryType<Query>()
-        .AddMutationType<Mutation>()
-        .AddFiltering()
-        .AddSorting()
-        .AddProjections();
     builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -70,6 +62,15 @@ try
 
     builder.Services.AddAuthorization();
     builder.Services.AddScoped<IClaimsTransformation, ExternalUserClaimsTransformer>();
+
+    builder.Services
+        .AddGraphQLServer()
+        .AddQueryType<Query>()
+        .AddMutationType<Mutation>()
+        .AddFiltering()
+        .AddSorting()
+        .AddProjections()
+        .AddAuthorization();
 
     var app = builder.Build();
 
