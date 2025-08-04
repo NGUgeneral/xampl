@@ -28,5 +28,7 @@ namespace xampl.ViewModels
         public virtual User CreatedByNavigation { get; set; }
 
         public virtual User LastUpdatedByNavigation { get; set; }
+
+        public string CreaatedByNavigationFullName => $"{CreatedByNavigation.FirstName} {CreatedByNavigation.LastName}";
     }
 }
