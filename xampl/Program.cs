@@ -4,15 +4,17 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using xampl.GraphQL;
 using xampl.Hubs;
+using xampl.Middleware;
 using xampl.Models.Xampl;
 using xampl.Services.ClaimsTransformer;
 using xampl.Services.ConfigOptionsService;
 using xampl.Services.EmailSenderService;
 using xampl.Services.GeminiService;
+using xampl.Services.RateLimiterService;
 using xampl.Services.RepositoryService;
 using xampl.Utils;
-using xampl.GraphQL;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -35,6 +37,11 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AddSignalR();
     builder.Services.AddHttpClient();
+    builder.Services.AddHttpClient<CloudRateLimiterService>(client =>
+    {
+        client.BaseAddress = new Uri(builder?.Configuration["Variables:RateLimiterUrl"] ?? string.Empty);
+        client.Timeout = TimeSpan.FromSeconds(2);
+    });
     builder.Services.AddDbContextPool<XamplContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("supabase"), options =>
         {
@@ -85,6 +92,7 @@ try
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseMiddleware<RateLimitingMiddleware>();
     app.MapHub<ConsoleHub>("/consoleHub");
     app.MapGraphQL();
     app.MapControllerRoute(

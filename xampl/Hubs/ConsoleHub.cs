@@ -1,21 +1,24 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System;
+using Microsoft.Extensions.Options;
+using xampl.Services.ConfigOptionsService;
 
 namespace xampl.Hubs
 {
     public class ConsoleHub(
-        ILogger<ConsoleHub> logger
+        ILogger<ConsoleHub> logger,
+        IOptions<ConfigOptions> configOptions
     ) : Hub
     {
         private readonly ILogger<ConsoleHub> _logger = logger;
+        private readonly ConfigOptions _config = configOptions.Value;
 
         public async Task SendCommand(string command)
         {
             await Clients.Caller.SendAsync("ReceiveOutput", GetCommandResponse(command));
         }
 
-        private static string GetCommandResponse(string command)
-        {
+        private string GetCommandResponse(string command)
+        {   
             //TODO: implement command parsing logic,
             //i.g. mapping commands and generic response for unavailable commands;
             return command.Trim().ToLower() switch
@@ -24,8 +27,9 @@ namespace xampl.Hubs
                     "test               - test connection to server",
                 "test" => 
                     "This message was generated on the server. SignalR communicating correctly.",
+                "rl_url" => _config.RateLimiterUrl,
                 _ =>
-                    $"Command unknown: {command}",
+                    $"Command unknown: {command}"
             };
         }
 
