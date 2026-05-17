@@ -8,6 +8,7 @@ namespace xampl.Services.ConfigOptionsService
         public string Domain { get; set; }
         public string GoogleGeminiApiKey { get; set; }
         public string GoogleGeminiApiUrl { get; set; }
+        public string RateLimiterUrl { get; set; }
         public SmtpSettings SmtpSettings { get; set; } = new SmtpSettings();
     }
 
