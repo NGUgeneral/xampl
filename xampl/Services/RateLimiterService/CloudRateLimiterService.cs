@@ -2,25 +2,17 @@
 using System.Net;
 using xampl.Services.ConfigOptionsService;
 
-namespace xampl.Services.RateLimitService
+namespace xampl.Services.RateLimiterService
 {
-    public class CloudRateLimiterService
-    {
-        private readonly HttpClient _httpClient;
-        private readonly ILogger<CloudRateLimiterService> _logger;
-        private readonly ConfigOptions _config;
-
-
-        public CloudRateLimiterService(
-            HttpClient httpClient,
-            ILogger<CloudRateLimiterService> logger,
-            IOptions<ConfigOptions> configOptions
+    public class CloudRateLimiterService(
+        HttpClient httpClient,
+        ILogger<CloudRateLimiterService> logger,
+        IOptions<ConfigOptions> configOptions
         )
-        {
-            _httpClient = httpClient;
-            _logger = logger;
-            _config = configOptions.Value;
-        }
+    {
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly ILogger<CloudRateLimiterService> _logger = logger;
+        private readonly ConfigOptions _config = configOptions.Value;
 
         public async Task<bool> IsRequestAllowedAsync(string key, int limit = 100, int window = 60)
         {
