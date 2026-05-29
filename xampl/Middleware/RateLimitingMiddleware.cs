@@ -14,7 +14,7 @@ namespace xampl.Middleware
         public async Task InvokeAsync(HttpContext context, CloudRateLimiterService rateLimiter)
         {
             var userIp = context.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
-            var cacheKey = $"global:rate:{userIp}";
+            var cacheKey = $"xampl:rate:{userIp}";
             bool isAllowed = await rateLimiter.IsRequestAllowedAsync(cacheKey);
 
             if (!isAllowed)
