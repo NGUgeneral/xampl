@@ -5,9 +5,6 @@ using System.Collections.Generic;
 
 namespace xampl.Models.Xampl;
 
-/// <summary>
-/// Store main user data
-/// </summary>
 public partial class User
 {
     public int Id { get; set; }

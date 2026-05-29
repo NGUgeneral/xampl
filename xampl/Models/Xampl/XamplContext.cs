@@ -28,13 +28,17 @@ public partial class XamplContext : DbContext
             .HasPostgresEnum("auth", "code_challenge_method", new[] { "s256", "plain" })
             .HasPostgresEnum("auth", "factor_status", new[] { "unverified", "verified" })
             .HasPostgresEnum("auth", "factor_type", new[] { "totp", "webauthn", "phone" })
+            .HasPostgresEnum("auth", "oauth_authorization_status", new[] { "pending", "approved", "denied", "expired" })
+            .HasPostgresEnum("auth", "oauth_client_type", new[] { "public", "confidential" })
+            .HasPostgresEnum("auth", "oauth_registration_type", new[] { "dynamic", "manual" })
+            .HasPostgresEnum("auth", "oauth_response_type", new[] { "code" })
             .HasPostgresEnum("auth", "one_time_token_type", new[] { "confirmation_token", "reauthentication_token", "recovery_token", "email_change_token_new", "email_change_token_current", "phone_change_token" })
             .HasPostgresEnum("realtime", "action", new[] { "INSERT", "UPDATE", "DELETE", "TRUNCATE", "ERROR" })
             .HasPostgresEnum("realtime", "equality_op", new[] { "eq", "neq", "lt", "lte", "gt", "gte", "in" })
+            .HasPostgresEnum("storage", "buckettype", new[] { "STANDARD", "ANALYTICS", "VECTOR" })
             .HasPostgresExtension("extensions", "pg_stat_statements")
             .HasPostgresExtension("extensions", "pgcrypto")
             .HasPostgresExtension("extensions", "uuid-ossp")
-            .HasPostgresExtension("graphql", "pg_graphql")
             .HasPostgresExtension("vault", "supabase_vault");
 
         modelBuilder.Entity<Document>(entity =>
@@ -42,8 +46,6 @@ public partial class XamplContext : DbContext
             entity.HasKey(e => e.Id).HasName("Document_pkey");
 
             entity.ToTable("Document");
-
-            entity.HasIndex(e => e.CreatedBy, "Document_created_by_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Content)
@@ -77,11 +79,9 @@ public partial class XamplContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("RolesLookup_pkey");
+            entity.HasKey(e => e.Id).HasName("Role_pkey");
 
             entity.ToTable("Role");
-
-            entity.HasIndex(e => e.Title, "RolesLookup_title_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Title)
@@ -91,11 +91,11 @@ public partial class XamplContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("Uaer_pkey");
+            entity.HasKey(e => e.Id).HasName("User_pkey");
 
-            entity.ToTable("User", tb => tb.HasComment("Store main user data"));
+            entity.ToTable("User");
 
-            entity.HasIndex(e => e.Email, "Uaer_email_key").IsUnique();
+            entity.HasIndex(e => e.Email, "User_email_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
@@ -119,11 +119,9 @@ public partial class XamplContext : DbContext
 
         modelBuilder.Entity<UserRole>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("UserRoles_pkey");
+            entity.HasKey(e => e.Id).HasName("UserRole_pkey");
 
             entity.ToTable("UserRole");
-
-            entity.HasIndex(e => e.UserId, "UserRoles_user_id_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.RoleId).HasColumnName("role_id");
@@ -132,14 +130,13 @@ public partial class XamplContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.UserRoles)
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("UserRoles_role_id_fkey");
+                .HasConstraintName("UserRole_role_id_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserRoles)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("UserRoles_user_id_fkey");
+                .HasConstraintName("UserRole_user_id_fkey");
         });
-        modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
 
         OnModelCreatingPartial(modelBuilder);
     }

@@ -25,10 +25,10 @@ namespace xampl.ViewModels
         
         public bool IsPublic { get; set; }
 
-        public virtual User CreatedByNavigation { get; set; }
+        public virtual UserVM CreatedByNavigation { get; set; }
 
-        public virtual User LastUpdatedByNavigation { get; set; }
+        public virtual UserVM LastUpdatedByNavigation { get; set; }
 
-        public string CreatedByNavigationFullName => $"{CreatedByNavigation.FirstName} {CreatedByNavigation.LastName}";
+        public string CreatedByNavigationFullName => CreatedByNavigation is null ? string.Empty : $"{CreatedByNavigation?.FirstName} {CreatedByNavigation?.LastName}";
     }
 }
